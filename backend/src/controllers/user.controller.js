@@ -1,39 +1,44 @@
 import * as userService from '../services/user.service.js';
-import { asyncHandler } from '../utils/asyncHandler.js';
-
-// 회원가입
-export const createUser = asyncHandler(async (req, res) => {
-  const user = await userService.createUser(req.body);
-  res.status(201).json(user);
-});
 
 // 모든 유저 조회
-export const getUsers = asyncHandler(async (req, res) => {
-  const users = await userService.getAllUsers();
+export const getUsers = async (req, res) => {
+  const users = await userService.getUsers();
   res.json(users);
-});
+};
 
 // 특정 유저 조회
-export const getUserById = asyncHandler(async (req, res) => {
-  const user = await userService.getUserById(req.params.id);
+export const getUserById = async (req, res) => {
+  const { id } = req.params;
+  const user = await userService.getUserById(id);
   res.json(user);
-});
+};
+
+// 유저 생성 (회원가입)
+export const createUser = async (req, res) => {
+  const data = req.body;
+  const user = await userService.createUser(data);
+  res.status(201).json(user);
+};
 
 // 유저 수정
-export const updateUser = asyncHandler(async (req, res) => {
-  const user = await userService.updateUser(req.params.id, req.body);
+export const updateUser = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const user = await userService.updateUser(id, data);
   res.json(user);
-});
+};
 
 // 유저 삭제
-export const deleteUser = asyncHandler(async (req, res) => {
-  await userService.deleteUser(req.params.id);
-  res.status(204).send();
-});
+export const deleteUser = async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  await userService.deleteUser(id, data);
+  res.status(204).json({ message: '사용자가 삭제되었습니다.', id });
+};
 
 // 로그인
-export const loginUser = asyncHandler(async (req, res) => {
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  const user = await userService.loginUser(email, password);
-  res.json(user);
-});
+  const { user, token } = await userService.loginUser(email, password);
+  res.json({ user, token });
+};
