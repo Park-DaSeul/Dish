@@ -14,6 +14,9 @@ export const authenticate = (req, res, next) => {
     req.user = decoded; // 토큰 payload를 req.user에 저장
     next(); // 다음 미들웨어 또는 컨트롤러로 이동
   } catch (err) {
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: '토큰이 만료되었습니다.' });
+    }
     return res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
   }
 };

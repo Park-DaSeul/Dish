@@ -1,6 +1,11 @@
 import prisma from '../utils/prisma.js';
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import {
+  getOneByIdOrFail,
+  getUserByEmailOrFail,
+  verifyPassword,
+  hashPassword,
+} from '../utils';
 
 // 공통 select (중복 제거)
 const userSelect = {
@@ -32,8 +37,14 @@ export const getUserById = async (id) => {
 export const createUser = async (data) => {
   const { name, email, password } = data;
 
+  // 이메일 중복 확인
+  const existingUser = await checkUserExistsByEmail(email);
+  if (existingUser) {
+    throw new Error('이미 사용 중인 이메일입니다.');
+  }
+
   // 비밀번호 해시 처리
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await hashPassword(password);
 
   const user = await prisma.user.create({
     data: {
@@ -49,12 +60,13 @@ export const createUser = async (data) => {
 // 유저 수정
 export const updateUser = async (id, data) => {
   const { name, password, newPassword } = data;
-  await verifyPasswordById(id, password);
+  const userData = await getOneByIdOrFail(prisma.user, id, '사용자');
+  await verifyPassword(password, userData.password);
 
   const updateData = {
     ...(name && { name }),
     // 비밀번호 해시 처리
-    ...(newPassword && { password: await bcrypt.hash(newPassword, 10) }),
+    ...(newPassword && { password: await hashPassword(newPassword) }),
   };
 
   const user = await prisma.user.update({
@@ -68,7 +80,8 @@ export const updateUser = async (id, data) => {
 // 유저 삭제
 export const deleteUser = async (id, data) => {
   const { password } = data;
-  await verifyPasswordById(id, password);
+  const userData = await getOneByIdOrFail(prisma.user, id, '사용자');
+  await verifyPassword(password, userData.password);
 
   await prisma.user.delete({
     where: { id },
@@ -77,17 +90,8 @@ export const deleteUser = async (id, data) => {
 
 // 로그인
 export const loginUser = async (email, password) => {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
-  if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
-  }
-
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) {
-    throw new Error('비밀번호가 일치하지 않습니다.');
-  }
+  const user = await getUserByEmailOrFail(email);
+  await verifyPassword(password, user.password);
 
   // JWT 토큰 생성
   const token = jwt.sign(
@@ -98,18 +102,3 @@ export const loginUser = async (email, password) => {
 
   return { user: { id: user.id, name: user.name, email: user.email }, token };
 };
-
-// password 확인하는 헬퍼 함수
-async function verifyPasswordById(id, password) {
-  const user = await prisma.user.findUnique({
-    where: { id },
-  });
-  if (!user) {
-    throw new Error('사용자를 찾을 수 없습니다.');
-  }
-
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) {
-    throw new Error('비밀번호가 일치하지 않습니다.');
-  }
-}

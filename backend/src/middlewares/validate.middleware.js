@@ -1,25 +1,17 @@
 export const validate = (schemas) => (req, res, next) => {
   try {
-    // body 검사
-    if (schemas.body) {
-      req.body = schemas.body.parse(req.body);
-    }
+    for (const key of Object.keys(schemas)) {
+      const result = schemas[key].safeParse(req[key]);
 
-    // params 검사
-    if (schemas.params) {
-      req.params = schemas.params.parse(req.params);
+      if (!result.success) {
+        // ZodError를 next()로 전달 → 전역 에러 핸들러에서 처리
+        return next(result.error);
+      }
+      // 안전한 값으로 덮어씌움
+      req[key] = result.data;
     }
-
-    // query 검사
-    if (schemas.query) {
-      req.query = schemas.query.parse(req.query);
-    }
-
     next();
   } catch (err) {
-    return res.status(400).json({
-      error: 'Validation failed',
-      details: err.errors,
-    });
+    next(err); // 예상 못한 에러도 전역 핸들러로 넘김
   }
 };
