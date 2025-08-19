@@ -11,6 +11,7 @@ import {
 const userSelect = {
   id: true,
   name: true,
+  nickname: true,
   email: true,
   createdAt: true,
   updatedAt: true,
@@ -35,7 +36,7 @@ export const getUserById = async (id) => {
 
 // 유저 생성 (회원가입)
 export const createUser = async (data) => {
-  const { name, email, password } = data;
+  const { name, nickname, email, password } = data;
 
   // 이메일 중복 확인
   const existingUser = await checkUserExistsByEmail(email);
@@ -49,6 +50,7 @@ export const createUser = async (data) => {
   const user = await prisma.user.create({
     data: {
       name,
+      nickname,
       email,
       password: hashedPassword,
     },
@@ -59,12 +61,13 @@ export const createUser = async (data) => {
 
 // 유저 수정
 export const updateUser = async (id, data) => {
-  const { name, password, newPassword } = data;
+  const { name, nickname, password, newPassword } = data;
   const userData = await getOneByIdOrFail(prisma.user, id, '사용자');
   await verifyPassword(password, userData.password);
 
   const updateData = {
     ...(name && { name }),
+    ...(nickname && { nickname }),
     // 비밀번호 해시 처리
     ...(newPassword && { password: await hashPassword(newPassword) }),
   };
@@ -100,5 +103,13 @@ export const loginUser = async (email, password) => {
     { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }, // 만료시간
   );
 
-  return { user: { id: user.id, name: user.name, email: user.email }, token };
+  return {
+    user: {
+      id: user.id,
+      name: user.name,
+      nickname: user.nickname,
+      email: user.email,
+    },
+    token,
+  };
 };
