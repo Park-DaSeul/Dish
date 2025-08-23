@@ -31,6 +31,7 @@ export const getUserById = async (id) => {
     where: { id },
     select: userSelect,
   });
+  if (!user) throw new Error('사용자를 찾을 수 없습니다.');
   return user;
 };
 

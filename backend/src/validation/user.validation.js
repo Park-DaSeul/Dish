@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// 공통 id, name, password, email (중복 제거)
+// 공통 id, name, nickname, password, email (중복 제거)
 const idSchema = z.uuid('UUID 형식이어야 합니다.');
 const nameSchema = z
   .string()
