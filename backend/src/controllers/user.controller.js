@@ -13,13 +13,6 @@ export const getUserById = async (req, res) => {
   res.json({ success: true, data: user });
 };
 
-// 유저 생성 (회원가입)
-export const createUser = async (req, res) => {
-  const data = req.body;
-  const user = await userService.createUser(data);
-  res.status(201).json({ success: true, data: user });
-};
-
 // 유저 수정
 export const updateUser = async (req, res) => {
   const { id } = req.params;
@@ -33,12 +26,5 @@ export const deleteUser = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   await userService.deleteUser(id, data);
-  res.status(204).json({ success: true, message: '사용자가 삭제되었습니다.' });
-};
-
-// 로그인
-export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  const { user, token } = await userService.loginUser(email, password);
-  res.json({ success: true, user, token });
+  res.status(200).json({ success: true, message: '사용자가 삭제되었습니다.' });
 };

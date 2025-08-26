@@ -1,21 +1,10 @@
 import prisma from '../utils/prisma.js';
-import jwt from 'jsonwebtoken';
 import {
   getOneByIdOrFail,
-  getUserByEmailOrFail,
   verifyPassword,
   hashPassword,
-} from '../utils';
-
-// 공통 select (중복 제거)
-const userSelect = {
-  id: true,
-  name: true,
-  nickname: true,
-  email: true,
-  createdAt: true,
-  updatedAt: true,
-};
+  userSelect,
+} from '../utils/index.js';
 
 // 모든 유저 조회
 export const getUsers = async () => {
@@ -35,35 +24,14 @@ export const getUserById = async (id) => {
   return user;
 };
 
-// 유저 생성 (회원가입)
-export const createUser = async (data) => {
-  const { name, nickname, email, password } = data;
-
-  // 이메일 중복 확인
-  const existingUser = await checkUserExistsByEmail(email);
-  if (existingUser) {
-    throw new Error('이미 사용 중인 이메일입니다.');
-  }
-
-  // 비밀번호 해시 처리
-  const hashedPassword = await hashPassword(password);
-
-  const user = await prisma.user.create({
-    data: {
-      name,
-      nickname,
-      email,
-      password: hashedPassword,
-    },
-    select: userSelect,
-  });
-  return user;
-};
-
 // 유저 수정
 export const updateUser = async (id, data) => {
   const { name, nickname, password, newPassword } = data;
+  // 유저가 존재하는지 확인
   const userData = await getOneByIdOrFail(prisma.user, id, '사용자');
+  if (userData.id !== id) {
+    throw new Error('사용자를 삭제할 권한이 없습니다.');
+  }
   await verifyPassword(password, userData.password);
 
   const updateData = {
@@ -84,33 +52,14 @@ export const updateUser = async (id, data) => {
 // 유저 삭제
 export const deleteUser = async (id, data) => {
   const { password } = data;
+  // 유저가 존재하는지 확인
   const userData = await getOneByIdOrFail(prisma.user, id, '사용자');
+  if (userData.id !== id) {
+    throw new Error('사용자를 삭제할 권한이 없습니다.');
+  }
   await verifyPassword(password, userData.password);
 
   await prisma.user.delete({
     where: { id },
   });
-};
-
-// 로그인
-export const loginUser = async (email, password) => {
-  const user = await getUserByEmailOrFail(email);
-  await verifyPassword(password, user.password);
-
-  // JWT 토큰 생성
-  const token = jwt.sign(
-    { id: user.id, email: user.email }, // payload
-    process.env.JWT_SECRET, // secret key
-    { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }, // 만료시간
-  );
-
-  return {
-    user: {
-      id: user.id,
-      name: user.name,
-      nickname: user.nickname,
-      email: user.email,
-    },
-    token,
-  };
 };

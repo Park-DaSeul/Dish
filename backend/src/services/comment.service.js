@@ -1,49 +1,37 @@
 import prisma from '../utils/prisma.js';
-import { getOneByIdOrFail } from '../utils/db.js';
+import { getOneByIdOrFail, commentSelect } from '../utils/index.js';
 
-// 공통 select
-const commentSelect = {
-  id: true,
-  content: true,
-  createdAt: true,
-  updatedAt: true,
-  user: {
-    select: {
-      id: true,
-      name: true,
-      nickname: true,
-    },
-  },
-};
-
-/**
- * 특정 게시물의 모든 댓글 조회
- * @param {string} dishId - 게시물 ID
- */
-export const getCommentsByDish = async (dishId) => {
+// 특정 게시물의 모든 댓글 조회
+export const getComments = async (dishId) => {
   // 게시물이 존재하는지 확인
   await getOneByIdOrFail(prisma.dish, dishId, '게시물');
 
-  return prisma.comment.findMany({
+  const comments = await prisma.comment.findMany({
     where: { dishId },
     orderBy: {
       createdAt: 'asc',
     },
     select: commentSelect,
   });
+  return comments;
 };
 
-/**
- * 댓글 생성
- * @param {string} dishId - 게시물 ID
- * @param {string} userId - 사용자 ID
- * @param {string} content - 댓글 내용
- */
-export const createComment = async (dishId, userId, content) => {
+// 특정 댓글 조회
+export const getCommentById = async (id) => {
+  const comment = await prisma.comment.findUnique({
+    where: { id },
+  });
+  if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
+  return comment;
+};
+
+// 댓글 생성
+export const createComment = async (dishId, userId, data) => {
+  const { content } = data;
   // 게시물이 존재하는지 확인
   await getOneByIdOrFail(prisma.dish, dishId, '게시물');
 
-  return prisma.comment.create({
+  const comment = await prisma.comment.create({
     data: {
       content,
       dishId,
@@ -51,43 +39,39 @@ export const createComment = async (dishId, userId, content) => {
     },
     select: commentSelect,
   });
+  return comment;
 };
 
-/**
- * 댓글 수정
- * @param {string} commentId - 댓글 ID
- * @param {string} userId - 사용자 ID
- * @param {string} content - 새로운 댓글 내용
- */
-export const updateComment = async (commentId, userId, content) => {
-  const comment = await getOneByIdOrFail(prisma.comment, commentId, '댓글');
-
-  if (comment.userId !== userId) {
+// 댓글 수정
+export const updateComment = async (id, userId, data) => {
+  const { content } = data;
+  // 댓글이 존재하는지 확인
+  const commentData = await getOneByIdOrFail(prisma.comment, id, '댓글');
+  if (commentData.userId !== userId) {
     throw new Error('댓글을 수정할 권한이 없습니다.');
   }
 
-  return prisma.comment.update({
-    where: { id: commentId },
-    data: {
-      content,
-    },
+  const updateData = {
+    ...(content && { content }),
+  };
+
+  const comment = await prisma.comment.update({
+    where: { id },
+    data: updateData,
     select: commentSelect,
   });
+  return comment;
 };
 
-/**
- * 댓글 삭제
- * @param {string} commentId - 댓글 ID
- * @param {string} userId - 사용자 ID
- */
-export const deleteComment = async (commentId, userId) => {
-  const comment = await getOneByIdOrFail(prisma.comment, commentId, '댓글');
-
-  if (comment.userId !== userId) {
+// 댓글 삭제
+export const deleteComment = async (id, userId) => {
+  // 댓글이 존재하는지 확인
+  const commentData = await getOneByIdOrFail(prisma.comment, id, '댓글');
+  if (commentData.userId !== userId) {
     throw new Error('댓글을 삭제할 권한이 없습니다.');
   }
 
   await prisma.comment.delete({
-    where: { id: commentId },
+    where: { id },
   });
 };

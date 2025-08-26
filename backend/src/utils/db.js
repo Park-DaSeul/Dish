@@ -30,12 +30,3 @@ export const checkUserExistsByEmail = async (email) => {
   // 사용자가 존재하면 해당 객체를 반환하고, 아니면 null을 반환합니다.
   return user;
 };
-
-// // ID로 유저 가져오기
-// const getUserByIdOrFail = async (id) => {
-//   const user = await prisma.user.findUnique({
-//     where: { id },
-//   });
-//   if (!user) throw new Error('사용자를 찾을 수 없습니다.');
-//   return user;
-// };

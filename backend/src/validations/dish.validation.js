@@ -5,11 +5,11 @@ const idSchema = z.uuid('UUID 형식이어야 합니다.');
 const userIdSchema = z.uuid('유효한 사용자 ID를 입력하세요.');
 const titleSchema = z
   .string()
-  .min(2, '제목은 최소 2글자 이상이어야 합니다.')
+  .min(1, '제목은 최소 1글자 이상이어야 합니다.')
   .max(100, '제목은 최대 100글자까지 가능합니다.');
 const descriptionSchema = z
   .string()
-  .min(5, '내용은 최소 5글자 이상이어야 합니다.')
+  .min(1, '내용은 최소 1글자 이상이어야 합니다.')
   .max(1000, '내용은 최대 1000글자까지 가능합니다.');
 const imageUrlSchema = z.url('이미지 URL 형식이 올바르지 않습니다.').optional();
 
@@ -17,18 +17,8 @@ const imageUrlSchema = z.url('이미지 URL 형식이 올바르지 않습니다.
 export const getDishes = {
   query: z
     .object({
-      page: z
-        .string()
-        .transform((val) => Number(val) || 1)
-        .min(1)
-        .max(1000)
-        .optional(),
-      limit: z
-        .string()
-        .transform((val) => Number(val) || 10)
-        .min(1)
-        .max(100)
-        .optional(),
+      page: z.coerce.number().min(1).max(1000).default(1),
+      limit: z.coerce.number().min(1).max(100).default(10),
     })
     .strict(),
 };

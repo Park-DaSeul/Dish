@@ -8,10 +8,10 @@
  * @param {Function} requestHandler - Express 라우트 핸들러 함수 (e.g., (req, res, next) => { ... })
  * @returns {Function} - 에러 핸들링이 적용된 새로운 라우트 핸들러 함수
  */
-const asyncHandler = (requestHandler) => {
-  return (req, res, next) => {
-    Promise.resolve(requestHandler(req, res, next)).catch((err) => next(err));
-  };
+export const asyncHandler = (requestHandler) => async (req, res, next) => {
+  try {
+    await requestHandler(req, res, next);
+  } catch (error) {
+    next(error);
+  }
 };
-
-export default asyncHandler;

@@ -1,0 +1,51 @@
+###
+# Variables
+@baseUrl = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImUwYWQ0ZDNmLTNmODAtNGE1ZS05MDFhLTI5ZmNjMmZjMDc5ZCIsImVtYWlsIjoidGVzdEBnbWFpbC5jb20iLCJpYXQiOjE3NTYwMjg2NzAsImV4cCI6MTc1NjAzMjI3MH0.99BanGejiJv9oxz-KJoPVDZfP82WobNTQX-_OIzdr2k
+
+###
+# 회원가입
+# @name signupRequest
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Test User",
+  "nickname": "tester",
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+###
+# 로그인
+# @name loginRequest
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+	"password": "123456789a"
+}
+
+###
+# 모든 요리 가져오기
+GET {{baseUrl}}/dishes
+Authorization: Bearer {{token}}
+
+###
+# 요리 생성
+POST {{baseUrl}}/dishes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "My Awesome Dish",
+  "description": "This is a description of my awesome dish. It is very tasty.",
+  "imageUrl": "http://example.com/dish.jpg"
+}
+
+###
+# 요리 삭제
+DELETE {{baseUrl}}/dishes/bf9c1516-27dc-4a24-810d-24983c70db18
+Content-Type: application/json
+Authorization: Bearer {{token}}

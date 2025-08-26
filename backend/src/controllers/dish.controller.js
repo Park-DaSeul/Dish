@@ -16,8 +16,9 @@ export const getDishById = async (req, res) => {
 
 // 게시글 생성
 export const createDish = async (req, res) => {
-  const data = { ...req.body, userId: req.user.id };
-  const dish = await dishService.createDish(data);
+  const data = req.body;
+  const userId = req.user.id; // 인증 미들웨어에서 설정된 사용자 ID
+  const dish = await dishService.createDish(userId, data);
   res.status(201).json({ success: true, data: dish });
 };
 
@@ -25,13 +26,15 @@ export const createDish = async (req, res) => {
 export const updateDish = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
-  const dish = await dishService.updateDish(id, data);
+  const userId = req.user.id; // 인증 미들웨어에서 설정된 사용자 ID
+  const dish = await dishService.updateDish(id, userId, data);
   res.json({ success: true, data: dish });
 };
 
 // 게시글 삭제
 export const deleteDish = async (req, res) => {
   const { id } = req.params;
-  await dishService.deleteDish(id);
-  res.json({ success: true, message: '게시글이 삭제되었습니다.' });
+  const userId = req.user.id; // 인증 미들웨어에서 설정된 사용자 ID
+  await dishService.deleteDish(id, userId);
+  res.status(200).json({ success: true, message: '게시글이 삭제되었습니다.' });
 };
