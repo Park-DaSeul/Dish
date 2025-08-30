@@ -17,5 +17,4 @@ yarn-error.log*
 /dist
 /build
 
-# frontend
-frontend/package-lock.json
+g
