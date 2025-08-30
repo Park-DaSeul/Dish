@@ -2,8 +2,11 @@ import prisma from '../utils/prisma.js';
 import { getOneByIdOrFail, userSelect } from '../utils/index.js';
 
 // 모든 게시글 조회
-export const getDishes = async (page = 1, limit = 10, search) => {
-  const skip = (page - 1) * limit;
+export const getDishes = async (query) => {
+  const { limit = 10, cursor, search } = query;
+  // limit 값을 숫자로 변환하고, 유효하지 않으면 기본값 10을 사용
+  const parsedLimit = parseInt(limit, 10) || 10;
+  // 페이지 네이션 커서방식
   const where = search
     ? {
         OR: [
@@ -15,8 +18,9 @@ export const getDishes = async (page = 1, limit = 10, search) => {
 
   const dishes = await prisma.dish.findMany({
     where,
-    skip,
-    take: limit,
+    take: parsedLimit,
+    skip: cursor ? 1 : 0,
+    cursor: cursor ? { id: cursor } : undefined,
     include: {
       user: {
         select: userSelect,
@@ -26,7 +30,11 @@ export const getDishes = async (page = 1, limit = 10, search) => {
     },
     orderBy: { createdAt: 'desc' },
   });
-  return dishes;
+
+  const lastDishInResults = dishes[parsedLimit - 1];
+  const nextCursor = lastDishInResults ? lastDishInResults.id : null;
+
+  return { dishes, nextCursor };
 };
 
 // 특정 게시글 조회

@@ -17,7 +17,7 @@ const imageUrlSchema = z.url('이미지 URL 형식이 올바르지 않습니다.
 export const getDishes = {
   query: z
     .object({
-      page: z.coerce.number().min(1).max(1000).default(1),
+      cursor: z.uuid().optional(),
       limit: z.coerce.number().min(1).max(100).default(10),
       search: z.string().optional(),
     })
