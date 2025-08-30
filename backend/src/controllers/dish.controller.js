@@ -2,8 +2,8 @@ import * as dishService from '../services/dish.service.js';
 
 // 모든 게시글 조회
 export const getDishes = async (req, res) => {
-  const { page, limit } = req.query;
-  const dishes = await dishService.getDishes(page, limit);
+  const { page, limit, search } = req.query;
+  const dishes = await dishService.getDishes(page, limit, search);
   res.json({ success: true, data: dishes });
 };
 

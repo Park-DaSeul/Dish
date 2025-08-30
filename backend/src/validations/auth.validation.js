@@ -23,6 +23,7 @@ export const signup = {
       nickname: nicknameSchema,
       email: emailSchema,
       password: passwordSchema,
+      confirmPassword: passwordSchema,
     })
     .strict(),
 };

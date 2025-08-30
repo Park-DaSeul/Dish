@@ -5,7 +5,7 @@ export const validate = (schemas) => (req, res, next) => {
     if (schemas.body) {
       const { success, data, error } = schemas.body.safeParse(req.body);
       if (!success) {
-        return next(new ApiError(400, '유효성 검사 실패', error.errors));
+        return next(error);
       }
       validationResult.body = data;
     }
@@ -13,7 +13,7 @@ export const validate = (schemas) => (req, res, next) => {
     if (schemas.query) {
       const { success, data, error } = schemas.query.safeParse(req.query);
       if (!success) {
-        return next(new ApiError(400, '유효성 검사 실패', error.errors));
+        return next(error);
       }
       validationResult.query = data;
     }
@@ -21,7 +21,7 @@ export const validate = (schemas) => (req, res, next) => {
     if (schemas.params) {
       const { success, data, error } = schemas.params.safeParse(req.params);
       if (!success) {
-        return next(new ApiError(400, '유효성 검사 실패', error.errors));
+        return next(error);
       }
       validationResult.params = data;
     }

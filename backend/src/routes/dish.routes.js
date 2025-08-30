@@ -8,14 +8,17 @@ import { dishNestedCommentRouter } from './comment.routes.js';
 
 const dishRouter = express.Router();
 
-// 로그인 필요
-// 아래 라우터는 모두 인증 필요
-dishRouter.use(authenticate);
-
-// 모든 게시글 조회, 생성
+// 모든 게시글 조회 (인증 불필요)
 dishRouter
   .route('/')
-  .get(validate(dishValidation.getDishes), asyncHandler(dishController.getDishes))
+  .get(validate(dishValidation.getDishes), asyncHandler(dishController.getDishes));
+
+// --- 여기부터 로그인 필요 ---
+dishRouter.use(authenticate);
+
+// 게시글 생성
+dishRouter
+  .route('/')
   .post(validate(dishValidation.createDish), asyncHandler(dishController.createDish));
 
 // 특정 게시글 조회, 수정, 삭제 (/:id)

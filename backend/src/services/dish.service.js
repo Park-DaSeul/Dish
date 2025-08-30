@@ -2,10 +2,19 @@ import prisma from '../utils/prisma.js';
 import { getOneByIdOrFail, userSelect } from '../utils/index.js';
 
 // 모든 게시글 조회
-export const getDishes = async (page = 1, limit = 10) => {
+export const getDishes = async (page = 1, limit = 10, search) => {
   const skip = (page - 1) * limit;
+  const where = search
+    ? {
+        OR: [
+          { title: { contains: search, mode: 'insensitive' } },
+          { description: { contains: search, mode: 'insensitive' } },
+        ],
+      }
+    : {};
 
   const dishes = await prisma.dish.findMany({
+    where,
     skip,
     take: limit,
     include: {

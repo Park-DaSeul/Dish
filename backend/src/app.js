@@ -15,10 +15,10 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-app.use('/auth', authRouter);
-app.use('/users', userRouter);
-app.use('/dishes', dishRouter);
-app.use('/comments', commentRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/dishes', dishRouter);
+app.use('/api/comments', commentRouter);
 
 app.use(errorHandler); //전역 에러핸들러
 

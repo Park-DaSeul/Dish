@@ -10,12 +10,17 @@ import {
 
 // 회원가입
 export const signup = async (data) => {
-  const { name, nickname, email, password } = data;
+  const { name, nickname, email, password, confirmPassword } = data;
 
   // 이메일 중복 확인
   const existingUser = await checkUserExistsByEmail(email);
   if (existingUser) {
     throw new Error('이미 사용 중인 이메일입니다.');
+  }
+
+  // 비밀번호 같은지 확인
+  if (password !== confirmPassword) {
+    throw new Error('비밀번호가 일치하지 않습니다');
   }
 
   // 비밀번호 해시 처리
