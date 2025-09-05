@@ -1,25 +1,17 @@
 import { z } from 'zod';
-
-// 공통 id, title, description, imageUrl (중복 제거)
-const idSchema = z.uuid('UUID 형식이어야 합니다.');
-const userIdSchema = z.uuid('유효한 사용자 ID를 입력하세요.');
-const dishIdSchema = z.uuid('유효한 게시물 ID를 입력하세요.');
-const contentShema = z
-  .string()
-  .min(1, '댓글은 최소 1글자 이상이어야 합니다.')
-  .max(600, '댓은 최대 500글자까지 가능합니다.');
+import { idSchema, dishIdSchema, contentShema, limitSchema, pageSchema } from '../utils/validations.js';
 
 // 모든 댓글 조회 (query + params)
 export const getComments = {
+  query: z
+    .object({
+      page: pageSchema,
+      limit: limitSchema,
+    })
+    .strict(),
   params: z
     .object({
       dishId: dishIdSchema,
-    })
-    .strict(),
-  query: z
-    .object({
-      page: z.coerce.number().min(1).max(1000).default(1),
-      limit: z.coerce.number().min(1).max(100).default(10),
     })
     .strict(),
 };
@@ -33,7 +25,7 @@ export const getCommentById = {
     .strict(),
 };
 
-// 댓글 생성 (body + params)
+// 댓글 생성 (params + body)
 export const createComment = {
   params: z
     .object({
@@ -47,7 +39,7 @@ export const createComment = {
     .strict(),
 };
 
-// 댓글 수정 (body + params)
+// 댓글 수정 (params + body)
 export const updateComment = {
   params: z
     .object({

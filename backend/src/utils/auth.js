@@ -9,5 +9,5 @@ export const verifyPassword = async (plainPassword, hashedPassword) => {
 // 비밀번호를 해시 처리하여 반환
 export const hashPassword = async (password) => {
   const saltRounds = 10;
-  return bcrypt.hash(password, saltRounds);
+  return await bcrypt.hash(password, saltRounds);
 };

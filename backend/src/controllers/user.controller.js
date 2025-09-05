@@ -1,19 +1,19 @@
 import * as userService from '../services/user.service.js';
 
-// 모든 유저 조회
+// 모든 사용자 조회
 export const getUsers = async (req, res) => {
   const users = await userService.getUsers();
   res.json({ success: true, data: users });
 };
 
-// 특정 유저 조회
+// 특정 사용자 조회
 export const getUserById = async (req, res) => {
   const { id } = req.params;
   const user = await userService.getUserById(id);
   res.json({ success: true, data: user });
 };
 
-// 유저 수정
+// 사용자 수정
 export const updateUser = async (req, res) => {
   const { id } = req.params;
   const data = req.body;
@@ -21,7 +21,7 @@ export const updateUser = async (req, res) => {
   res.json({ success: true, data: user });
 };
 
-// 유저 삭제
+// 사용자 삭제
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
   const data = req.body;

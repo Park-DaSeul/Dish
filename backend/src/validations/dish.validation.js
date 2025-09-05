@@ -1,30 +1,26 @@
 import { z } from 'zod';
+import {
+  idSchema,
+  titleSchema,
+  descriptionSchema,
+  imageUrlSchema,
+  cursorSchema,
+  limitSchema,
+  searchSchema,
+} from '../utils/validations.js';
 
-// 공통 id, title, description, imageUrl (중복 제거)
-const idSchema = z.uuid('UUID 형식이어야 합니다.');
-const userIdSchema = z.uuid('유효한 사용자 ID를 입력하세요.');
-const titleSchema = z
-  .string()
-  .min(1, '제목은 최소 1글자 이상이어야 합니다.')
-  .max(100, '제목은 최대 100글자까지 가능합니다.');
-const descriptionSchema = z
-  .string()
-  .min(1, '내용은 최소 1글자 이상이어야 합니다.')
-  .max(1000, '내용은 최대 1000글자까지 가능합니다.');
-const imageUrlSchema = z.url('이미지 URL 형식이 올바르지 않습니다.').optional();
-
-// 모든 게시글 조회 (query)
+// 모든 요리 게시글 조회 (query)
 export const getDishes = {
   query: z
     .object({
-      cursor: z.uuid().optional(),
-      limit: z.coerce.number().min(1).max(100).default(10),
-      search: z.string().optional(),
+      cursor: cursorSchema,
+      limit: limitSchema,
+      search: searchSchema,
     })
     .strict(),
 };
 
-// 특정 게시글 조회 (params)
+// 특정 요리 게시글 조회 (params)
 export const getDishById = {
   params: z
     .object({
@@ -33,7 +29,7 @@ export const getDishById = {
     .strict(),
 };
 
-// 게시글 생성 (body)
+// 요리 게시글 생성 (body)
 export const createDish = {
   body: z
     .object({
@@ -44,7 +40,7 @@ export const createDish = {
     .strict(),
 };
 
-// 게시글 수정 (body + params)
+// 요리 게시글 수정 (params + body)
 export const updateDish = {
   params: z
     .object({
@@ -60,7 +56,7 @@ export const updateDish = {
     .strict(),
 };
 
-// 게시글 삭제 (params)
+// 요리 게시글 삭제 (params)
 export const deleteDish = {
   params: z
     .object({

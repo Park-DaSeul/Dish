@@ -1,11 +1,8 @@
 import prisma from '../utils/prisma.js';
 import { getOneByIdOrFail, commentSelect } from '../utils/index.js';
 
-// 특정 게시물의 모든 댓글 조회
+// 모든 댓글 조회 (특정요리)
 export const getComments = async (dishId) => {
-  // 게시물이 존재하는지 확인
-  await getOneByIdOrFail(prisma.dish, dishId, '게시물');
-
   const comments = await prisma.comment.findMany({
     where: { dishId },
     orderBy: {
@@ -28,8 +25,6 @@ export const getCommentById = async (id) => {
 // 댓글 생성
 export const createComment = async (dishId, userId, data) => {
   const { content } = data;
-  // 게시물이 존재하는지 확인
-  await getOneByIdOrFail(prisma.dish, dishId, '게시물');
 
   const comment = await prisma.comment.create({
     data: {

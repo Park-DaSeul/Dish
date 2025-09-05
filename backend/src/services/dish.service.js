@@ -1,7 +1,7 @@
 import prisma from '../utils/prisma.js';
 import { getOneByIdOrFail, userSelect } from '../utils/index.js';
 
-// 모든 게시글 조회
+// 모든 요리 게시글 조회
 export const getDishes = async (query) => {
   const { limit = 10, cursor, search } = query;
   // limit 값을 숫자로 변환하고, 유효하지 않으면 기본값 10을 사용
@@ -37,7 +37,7 @@ export const getDishes = async (query) => {
   return { dishes, nextCursor };
 };
 
-// 특정 게시글 조회
+// 특정 요리 게시글 조회
 export const getDishById = async (id) => {
   const dish = await prisma.dish.findUnique({
     where: { id },
@@ -49,11 +49,11 @@ export const getDishById = async (id) => {
       likes: true,
     },
   });
-  if (!dish) throw new Error('게시글을 찾을 수 없습니다.');
+  if (!dish) throw new Error('요리 게시글을 찾을 수 없습니다.');
   return dish;
 };
 
-// 게시글 생성
+// 요리 게시글 생성
 export const createDish = async (userId, data) => {
   const { title, description, imageUrl } = data;
 
@@ -73,13 +73,13 @@ export const createDish = async (userId, data) => {
   return dish;
 };
 
-// 게시글 수정
+// 요리 게시글 수정
 export const updateDish = async (id, userId, data) => {
   const { title, description, imageUrl } = data;
-  // 게시물이 존재하는지 확인
-  const dishData = await getOneByIdOrFail(prisma.dish, id, '게시글');
+  // 게시글이 존재하는지 확인
+  const dishData = await getOneByIdOrFail(prisma.dish, id, '요리 게시글');
   if (dishData.userId !== userId) {
-    throw new Error('게시글을 수정할 권한이 없습니다.');
+    throw new Error('요리 게시글을 수정할 권한이 없습니다.');
   }
 
   const updateData = {
@@ -102,12 +102,12 @@ export const updateDish = async (id, userId, data) => {
   return dish;
 };
 
-// 게시글 삭제
+// 요리 게시글 삭제
 export const deleteDish = async (id, userId) => {
-  // 게시물이 존재하는지 확인
-  const dishData = await getOneByIdOrFail(prisma.dish, id, '게시글');
+  // 게시글이 존재하는지 확인
+  const dishData = await getOneByIdOrFail(prisma.dish, id, '요리 게시글');
   if (dishData.userId !== userId) {
-    throw new Error('게시글을 삭제할 권한이 없습니다.');
+    throw new Error('요리 게시글을 삭제할 권한이 없습니다.');
   }
 
   await prisma.dish.delete({
