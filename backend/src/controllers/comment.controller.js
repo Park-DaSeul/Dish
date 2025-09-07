@@ -8,11 +8,11 @@ export const getComments = async (req, res) => {
 };
 
 // 특정 댓글 조회
-export const getCommentById = async (req, res) => {
-  const { id } = req.params;
-  const comment = await commentService.getCommentById(id);
-  res.json({ success: true, data: comment });
-};
+// export const getCommentById = async (req, res) => {
+//   const { id } = req.params;
+//   const comment = await commentService.getCommentById(id);
+//   res.json({ success: true, data: comment });
+// };
 
 // 댓글 생성
 export const createComment = async (req, res) => {

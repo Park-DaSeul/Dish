@@ -19,7 +19,7 @@ commentRouter
 // 특정 댓글 조회, 수정, 삭제 (/:id)
 commentRouter
   .route('/:id')
-  .get(validate(commentValidation.getCommentById), asyncHandler(commentController.getCommentById))
+  // .get(validate(commentValidation.getCommentById), asyncHandler(commentController.getCommentById))
   .put(validate(commentValidation.updateComment), asyncHandler(commentController.updateComment))
   .delete(validate(commentValidation.deleteComment), asyncHandler(commentController.deleteComment));
 

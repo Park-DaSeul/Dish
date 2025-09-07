@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { idSchema, dishIdSchema, contentShema, limitSchema, pageSchema } from '../utils/validations.js';
 
-// 모든 댓글 조회 (query + params)
+// 모든 댓글 조회 (특정요리) (query + params)
 export const getComments = {
   query: z
     .object({
@@ -17,13 +17,13 @@ export const getComments = {
 };
 
 // 특정 댓글 조회 (params)
-export const getCommentById = {
-  params: z
-    .object({
-      id: idSchema,
-    })
-    .strict(),
-};
+// export const getCommentById = {
+//   params: z
+//     .object({
+//       id: idSchema,
+//     })
+//     .strict(),
+// };
 
 // 댓글 생성 (params + body)
 export const createComment = {

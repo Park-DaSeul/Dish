@@ -14,13 +14,13 @@ export const getComments = async (dishId) => {
 };
 
 // 특정 댓글 조회
-export const getCommentById = async (id) => {
-  const comment = await prisma.comment.findUnique({
-    where: { id },
-  });
-  if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
-  return comment;
-};
+// export const getCommentById = async (id) => {
+//   const comment = await prisma.comment.findUnique({
+//     where: { id },
+//   });
+//   if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
+//   return comment;
+// };
 
 // 댓글 생성
 export const createComment = async (dishId, userId, data) => {

@@ -23,6 +23,21 @@ export const dishSelect = {
   cookingTime: true,
   createdAt: true,
   updatedAt: true,
+  user: {
+    select: userSelect,
+  },
+  recipe: {
+    select: recipeSelect,
+  },
+  dishIngredient: {
+    select: dishIngredientSelect,
+  },
+  _count: {
+    select: {
+      likes: true,
+      comments: true,
+    },
+  },
 };
 
 // comment
@@ -50,4 +65,15 @@ export const ingredientSelect = {
   name: true,
   createdAt: true,
   updatedAt: true,
+};
+
+// dishIngredient
+export const dishIngredientSelect = {
+  quantity: true,
+  unit: true,
+  createdAt: true,
+  updatedAt: true,
+  ingredient: {
+    select: ingredientSelect,
+  },
 };

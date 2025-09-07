@@ -1,5 +1,5 @@
 import prisma from '../utils/prisma.js';
-import { getOneByIdOrFail, userSelect } from '../utils/index.js';
+import { getOneByIdOrFail, userSelect, dishSelect } from '../utils/index.js';
 
 // 모든 요리 게시글 조회
 export const getDishes = async (query) => {
@@ -21,13 +21,7 @@ export const getDishes = async (query) => {
     take: parsedLimit,
     skip: cursor ? 1 : 0,
     cursor: cursor ? { id: cursor } : undefined,
-    include: {
-      user: {
-        select: userSelect,
-      },
-      comments: true,
-      likes: true,
-    },
+    select: dishSelect,
     orderBy: { createdAt: 'desc' },
   });
 
@@ -41,21 +35,16 @@ export const getDishes = async (query) => {
 export const getDishById = async (id) => {
   const dish = await prisma.dish.findUnique({
     where: { id },
-    include: {
-      user: {
-        select: userSelect,
-      },
-      comments: true,
-      likes: true,
-    },
+    select: dishSelect,
   });
   if (!dish) throw new Error('요리 게시글을 찾을 수 없습니다.');
+
   return dish;
 };
 
 // 요리 게시글 생성
 export const createDish = async (userId, data) => {
-  const { title, description, imageUrl } = data;
+  const { title, description, imageUrl, recipes, ingredients } = data;
 
   const dish = await prisma.dish.create({
     data: {
@@ -63,43 +52,83 @@ export const createDish = async (userId, data) => {
       description,
       imageUrl,
       userId,
-    },
-    include: {
-      user: {
-        select: userSelect,
+      recipes: {
+        createMany: {
+          data: recipes.map((recipe) => ({
+            stepNumber: recipe.stepNumber,
+            instruction: recipe.instruction,
+            imageUrl: recipe.imageUrl,
+            userId,
+          })),
+        },
+      },
+      ingredients: {
+        create: ingredients.map((ingredient) => ({
+          quantity: ingredient.quantity,
+          unit: ingredient.unit,
+          ingredient: {
+            connectOrCreate: {
+              where: { name: ingredient.name },
+              create: { name: ingredient.name },
+            },
+          },
+        })),
       },
     },
+    select: dishSelect,
   });
+
   return dish;
 };
 
 // 요리 게시글 수정
 export const updateDish = async (id, userId, data) => {
-  const { title, description, imageUrl } = data;
+  const { title, description, imageUrl, recipes, ingredients } = data;
   // 게시글이 존재하는지 확인
   const dishData = await getOneByIdOrFail(prisma.dish, id, '요리 게시글');
   if (dishData.userId !== userId) {
     throw new Error('요리 게시글을 수정할 권한이 없습니다.');
   }
 
-  const updateData = {
-    ...(title && { title }),
-    ...(description && { description }),
-    ...(imageUrl && { imageUrl }),
-  };
+  const updatedDish = await prisma.$transaction(async (tx) => {
+    await tx.dishIngredient.deleteMany({ where: { dishId: id } });
+    await tx.recipe.deleteMany({ where: { dishId: id } });
 
-  const dish = await prisma.dish.update({
-    where: { id },
-    data: updateData,
-    include: {
-      user: {
-        select: userSelect,
+    return tx.dish.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        imageUrl,
+        userId,
+        recipes: {
+          createMany: {
+            data: recipes.map((recipe) => ({
+              stepNumber: recipe.stepNumber,
+              instruction: recipe.instruction,
+              imageUrl: recipe.imageUrl,
+              userId,
+            })),
+          },
+        },
+        ingredients: {
+          create: ingredients.map((ingredient) => ({
+            quantity: ingredient.quantity,
+            unit: ingredient.unit,
+            ingredient: {
+              connectOrCreate: {
+                where: { name: ingredient.name },
+                create: { name: ingredient.name },
+              },
+            },
+          })),
+        },
       },
-      comments: true,
-      likes: true,
-    },
+      select: dishSelect,
+    });
   });
-  return dish;
+
+  return updatedDish;
 };
 
 // 요리 게시글 삭제

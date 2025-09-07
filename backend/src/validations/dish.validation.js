@@ -7,6 +7,8 @@ import {
   cursorSchema,
   limitSchema,
   searchSchema,
+  recipesSchema,
+  ingredientsSchema,
 } from '../utils/validations.js';
 
 // 모든 요리 게시글 조회 (query)
@@ -36,6 +38,8 @@ export const createDish = {
       title: titleSchema,
       description: descriptionSchema,
       imageUrl: imageUrlSchema,
+      recipes: recipesSchema,
+      ingredients: ingredientsSchema,
     })
     .strict(),
 };
@@ -49,10 +53,13 @@ export const updateDish = {
     .strict(),
   body: z
     .object({
-      title: titleSchema.optional(),
-      description: descriptionSchema.optional(),
-      imageUrl: imageUrlSchema.optional(),
+      title: titleSchema,
+      description: descriptionSchema,
+      imageUrl: imageUrlSchema,
+      recipes: recipesSchema,
+      ingredients: ingredientsSchema,
     })
+    .partial()
     .strict(),
 };
 
