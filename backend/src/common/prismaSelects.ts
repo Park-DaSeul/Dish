@@ -1,9 +1,11 @@
+import type { Prisma } from '@prisma/client';
+
 // user
 export const userSelect = {
   id: true,
   name: true,
   nickname: true,
-};
+} satisfies Prisma.UserSelect;
 
 export const meSelect = {
   id: true,
@@ -12,15 +14,13 @@ export const meSelect = {
   email: true,
   createdAt: true,
   updatedAt: true,
-};
+} satisfies Prisma.UserSelect;
 
 // dish
 export const dishSelect = {
   id: true,
   title: true,
   description: true,
-  imageUrl: true,
-  cookingTime: true,
   createdAt: true,
   updatedAt: true,
   user: {
@@ -38,7 +38,7 @@ export const dishSelect = {
       comments: true,
     },
   },
-};
+} satisfies Prisma.DishSelect;
 
 // comment
 export const commentSelect = {
@@ -46,7 +46,7 @@ export const commentSelect = {
   content: true,
   createdAt: true,
   updatedAt: true,
-};
+} satisfies Prisma.CommetSelect;
 
 // recipe
 export const recipeSelect = {
@@ -57,7 +57,7 @@ export const recipeSelect = {
   duration: true,
   createdAt: true,
   updatedAt: true,
-};
+} satisfies Prisma.RecipeSelect;
 
 // ingredient
 export const ingredientSelect = {
@@ -65,7 +65,7 @@ export const ingredientSelect = {
   name: true,
   createdAt: true,
   updatedAt: true,
-};
+} satisfies Prisma.IngredientSelect;
 
 // dishIngredient
 export const dishIngredientSelect = {
@@ -76,4 +76,4 @@ export const dishIngredientSelect = {
   ingredient: {
     select: ingredientSelect,
   },
-};
+} satisfies Prisma.DishingredientSelect;

@@ -35,8 +35,6 @@ model Dish {
   id          String   @id @default(uuid())
   title       String
   description String
-  imageUrl    String
-  cookingTime Int // 아직 필요 없음
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -46,6 +44,7 @@ model Dish {
   likes       Like[]
   ingredients DishIngredient[]
   recipes     Recipe[]
+  images      Image[]
 }
 
 // 재료 모델
@@ -78,15 +77,15 @@ model Recipe {
   id          String   @id @default(uuid())
   stepNumber  Int
   instruction String
-  imageUrl    String?
-  duration    Int // 아직 필요 없음
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  dish   Dish   @relation(fields: [dishId], references: [id], onDelete: Cascade)
-  dishId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  dish    Dish    @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  dishId  String
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  String
+  image   Image?  @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  imageId String? @unique
 }
 
 // 댓글 모델
@@ -114,4 +113,16 @@ model Like {
   userId String
 
   @@unique([dishId, userId])
+}
+
+// 이미지 모델
+model Image {
+  id        String   @id @default(uuid())
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  dish   Dish    @relation(fields: [dishId], references: [id], onDelete: Cascade)
+  dishId String
+  recipe Recipe?
 }

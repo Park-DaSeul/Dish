@@ -71,16 +71,13 @@ export const recipesSchema = z
     }),
   )
   .min(1, '레시피는 최소 1개 이상이어야 합니다.')
-  .max(10, '레시피는 최대 10개까지 가능합니다.')
-  .required();
+  .max(10, '레시피는 최대 10개까지 가능합니다.');
 
 // ingredient
 export const ingredientsSchema = z
   .array(z.string())
   .min(1, '재료는 최소 1개 이상이어야 합니다.')
-  .max(10, '재료는 최대 10개까지 가능합니다.')
-  .max(30)
-  .required()
+  .max(30, '재료는 최대 30개까지 가능합니다.')
   .transform((data) => {
     return data.map((item) => {
       // 정규 표현식을 사용하여 문자열을 name, quantity, unit으로 분리합니다.

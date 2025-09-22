@@ -14,3 +14,7 @@ declare global {
     }
   }
 }
+
+declare global {
+  var prisma: PrismaClient;
+}
