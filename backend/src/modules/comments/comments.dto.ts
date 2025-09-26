@@ -1,5 +1,33 @@
 import { z } from 'zod';
+import type { Prisma } from '@prisma/client';
 import { idSchema, dishIdSchema, contentShema, limitSchema, pageSchema } from '../../common/validations.js';
+
+export interface GetCommentsQuery {
+  cursor?: string;
+  limit?: number;
+  search?: string;
+}
+
+export interface GetCommentsRepositoryQuery {
+  where: Prisma.CommentWhereInput;
+  take: number;
+  cursor?: Prisma.CommentWhereUniqueInput;
+  orderBy: Prisma.CommentOrderByWithRelationInput;
+  skip: number;
+}
+
+export interface CreateCommentData {
+  content: string;
+}
+
+export interface CreateCommentRepositoryData extends CreateCommentData {
+  dishId: string;
+  userId: string;
+}
+
+export interface UpdateCommentData {
+  content: string;
+}
 
 // 모든 댓글 조회 (특정요리) (query + params)
 export const getComments = {
