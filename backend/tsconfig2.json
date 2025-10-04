@@ -1,0 +1,111 @@
+{
+  "compilerOptions": {
+    /* https://aka.ms/tsconfig 를 방문하여 이 파일에 대해 더 알아볼 수 있습니다 */
+
+    /* 프로젝트 관련 설정 */
+    // "incremental": true,                              /* .tsbuildinfo 파일을 저장하여 프로젝트의 증분 컴파일을 허용합니다. */
+    // "composite": true,                                /* 프로젝트 참조를 사용할 수 있도록 제약 조건을 활성화합니다. */
+    // "tsBuildInfoFile": "./.tsbuildinfo",              /* 증분 컴파일 정보 파일(.tsbuildinfo)의 경로를 지정합니다. */
+    // "disableSourceOfProjectReferenceRedirect": true,  /* 프로젝트 참조 시 선언 파일 대신 소스 파일을 사용하는 것을 비활성화합니다. */
+    // "disableSolutionSearching": true,                 /* 편집 중 다중 프로젝트 참조 검사를 비활성화합니다. */
+    // "disableReferencedProjectLoad": true,             /* TypeScript가 자동으로 로드하는 프로젝트 수를 줄입니다. */
+
+    /* 언어 및 환경 */
+    "target": "es2016",                                  /* 생성되는 JavaScript의 언어 버전 및 관련 라이브러리 선언을 설정합니다. */
+    // "lib": [],                                        /* 대상 런타임 환경을 설명하는 라이브러리 선언 파일 집합을 지정합니다. */
+    // "jsx": "preserve",                                /* 생성되는 JSX 코드의 형태를 지정합니다. */
+    // "experimentalDecorators": true,                   /* 실험적 데코레이터 지원을 활성화합니다. */
+    // "emitDecoratorMetadata": true,                    /* 소스 파일에 대해 데코레이터 메타데이터를 생성합니다. */
+    // "jsxFactory": "",                                 /* React JSX를 대상으로 할 때 사용할 JSX 팩토리 함수를 지정합니다. 예: 'React.createElement' 또는 'h'. */
+    // "jsxFragmentFactory": "",                         /* React JSX를 대상으로 할 때 사용할 JSX Fragment 참조를 지정합니다. 예: 'React.Fragment' 또는 'Fragment'. */
+    // "jsxImportSource": "",                            /* 'jsx: react-jsx*'를 사용할 때 JSX 팩토리 함수의 모듈 경로를 지정합니다. */
+    // "reactNamespace": "",                             /* 'createElement'를 호출할 객체를 지정합니다. 이는 'react' JSX를 대상으로 할 때만 적용됩니다. */
+    // "noLib": true,                                    /* 기본 라이브러리 파일(lib.d.ts 포함)을 비활성화합니다. */
+    // "useDefineForClassFields": true,                  /* ECMAScript 표준 클래스 필드를 사용하도록 설정합니다. */
+    // "moduleDetection": "auto",                        /* JS 파일의 모듈 형식을 감지하는 방법을 제어합니다. */
+
+    /* 모듈 */
+    "module": "commonjs",                                /* 생성되는 모듈 코드 형식을 지정합니다. */
+    // "rootDir": "./",                                  /* 소스 파일의 루트 폴더를 지정합니다. */
+    // "moduleResolution": "node10",                     /* TypeScript가 모듈 경로를 찾는 방식을 지정합니다. */
+    // "baseUrl": "./",                                  /* 상대적이지 않은 모듈 이름을 해결하기 위한 기준 디렉터리를 지정합니다. */
+    // "paths": {},                                      /* 추가적인 조회 위치로 리맵할 가져오기 경로를 지정합니다. */
+    // "rootDirs": [],                                   /* 모듈 경로를 해결할 때 하나로 취급할 여러 폴더를 허용합니다. */
+    // "typeRoots": [],                                  /* './node_modules/@types'와 같은 타입 정의가 포함된 폴더를 지정합니다. */
+    // "types": [],                                      /* 소스 파일에서 참조하지 않고 포함할 타입 패키지 이름을 지정합니다. */
+    // "allowUmdGlobalAccess": true,                     /* UMD 글로벌 모듈에 접근을 허용합니다. */
+    // "moduleSuffixes": [],                             /* 모듈을 해결할 때 검색할 파일 이름 접미사 목록을 지정합니다. */
+    // "allowImportingTsExtensions": true,               /* TypeScript 파일 확장자를 포함하여 가져오기를 허용합니다. */
+    // "rewriteRelativeImportExtensions": true,          /* 출력 파일에서 '.ts', '.tsx', '.mts', '.cts' 확장자를 해당 JavaScript로 변경합니다. */
+    // "resolvePackageJsonExports": true,                /* 패키지 가져오기를 해결할 때 package.json의 'exports' 필드를 사용합니다. */
+    // "resolvePackageJsonImports": true,                /* package.json의 'imports' 필드를 가져오기 시 해결에 사용합니다. */
+    // "customConditions": [],                           /* 가져오기를 해결할 때 기본 조건에 추가로 설정할 조건을 지정합니다. */
+    // "noUncheckedSideEffectImports": true,             /* 사이드 이펙트 가져오기를 검사합니다. */
+    // "resolveJsonModule": true,                        /* .json 파일 가져오기를 활성화합니다. */
+    // "allowArbitraryExtensions": true,                 /* 선언 파일이 있는 경우 임의의 파일 확장자를 가져오는 것을 허용합니다. */
+    // "noResolve": true,                                /* 가져오기, require 또는 <reference>가 프로젝트에 포함되는 파일 수를 확장하지 못하도록 금지합니다. */
+
+    /* JavaScript 지원 */
+    // "allowJs": true,                                  /* JavaScript 파일을 프로그램의 일부로 포함할 수 있도록 허용합니다. 'checkJs' 옵션을 사용하여 이러한 파일에서 오류를 보고받습니다. */
+    // "checkJs": true,                                  /* 타입이 체크된 JavaScript 파일에서 오류를 보고받습니다. */
+    // "maxNodeModuleJsDepth": 1,                        /* 'node_modules'에서 JavaScript 파일을 체크할 최대 폴더 깊이를 지정합니다. 'allowJs'에만 적용됩니다. */
+
+    /* 출력 */
+    // "declaration": true,                              /* 프로젝트의 TypeScript와 JavaScript 파일에서 .d.ts 파일을 생성합니다. */
+    // "declarationMap": true,                           /* .d.ts 파일의 소스 맵을 생성합니다. */
+    // "emitDeclarationOnly": true,                      /* JavaScript 파일이 아닌 .d.ts 파일만 출력합니다. */
+    // "sourceMap": true,                                /* 생성된 JavaScript 파일에 대한 소스 맵 파일을 생성합니다. */
+    // "inlineSourceMap": true,                          /* 생성된 JavaScript 내부에 소스 맵 파일을 포함합니다. */
+    // "noEmit": true,                                   /* 컴파일에서 파일 출력을 비활성화합니다. */
+    // "outFile": "./",                                  /* 출력된 모든 JavaScript 파일을 하나의 파일로 번들링합니다. */
+    // "outDir": "./",                                   /* 모든 출력 파일의 폴더를 지정합니다. */
+    // "removeComments": true,                           /* 주석을 제거하여 파일을 출력합니다. */
+    // "importHelpers": true,                            /* 프로젝트당 한 번씩 tslib에서 헬퍼 함수를 가져오는 것을 허용합니다. */
+    // "downlevelIteration": true,                       /* 반복문에 대해 더 호환성이 높지만 장황한 JavaScript를 출력합니다. */
+    // "sourceRoot": "",                                 /* 디버거가 참조 소스 코드를 찾는 기본 경로를 지정합니다. */
+    // "mapRoot": "",                                    /* 디버거가 맵 파일을 찾을 위치를 지정합니다. */
+    // "inlineSources": true,                            /* 소스 맵 내부에 소스 코드를 포함합니다. */
+    // "emitBOM": true,                                  /* 출력 파일의 시작 부분에 UTF-8 BOM을 출력합니다. */
+    // "newLine": "crlf",                                /* 파일 출력을 위한 줄 바꿈 문자를 설정합니다. */
+    // "stripInternal": true,                            /* JSDoc 주석에 '@internal'이 포함된 선언을 출력하지 않습니다. */
+    // "noEmitHelpers": true,                            /* '__extends'와 같은 헬퍼 함수 생성을 비활성화합니다. */
+    // "noEmitOnError": true,                            /* 타입 체크 오류가 발생하면 파일을 출력하지 않습니다. */
+    // "preserveConstEnums": true,                       /* 'const enum' 선언을 삭제하지 않고 유지합니다. */
+    // "declarationDir": "./",                           /* 생성된 선언 파일의 출력 디렉터리를 지정합니다. */
+
+    /* 상호 운용성 제약 */
+    // "isolatedModules": true,                          /* 각 파일이 다른 파일의 의존 없이 안전하게 트랜스파일될 수 있도록 보장합니다. */
+    // "verbatimModuleSyntax": true,                     /* 타입 전용으로 표시되지 않은 모든 가져오기 및 내보내기를 변환하지 않고 유지합니다. */
+    // "isolatedDeclarations": true,                     /* 다른 도구가 선언 파일을 쉽게 생성할 수 있도록 수출을 충분히 주석 처리해야 합니다. */
+    // "allowSyntheticDefaultImports": true,             /* 모듈에 기본 내보내기가 없을 때도 'import x from y'를 허용합니다. */
+    "esModuleInterop": true,                             /* CommonJS 모듈을 가져올 때 추가적인 JavaScript를 출력하여 호환성을 향상합니다. 이 설정은 타입 호환성을 위해 'allowSyntheticDefaultImports'를 활성화합니다. */
+    // "preserveSymlinks": true,                         /* 심볼릭 링크를 실제 경로로 해석하지 않습니다. 이는 Node의 동일한 플래그와 관련이 있습니다. */
+    "forceConsistentCasingInFileNames": true,            /* 가져오기에 대한 대소문자 일관성을 보장합니다. */
+
+    /* 타입 검사 */
+    "strict": true,                                      /* 모든 엄격한 타입 검사 옵션을 활성화합니다. */
+    // "noImplicitAny": true,                            /* 암시적으로 'any' 타입이 되는 표현식 및 선언에 대한 오류 보고를 활성화합니다. */
+    // "strictNullChecks": true,                         /* 'null' 및 'undefined'를 타입 검사에 포함합니다. */
+    // "strictFunctionTypes": true,                      /* 함수 할당 시 매개변수와 반환값이 하위 타입인지 검사합니다. */
+    // "strictBindCallApply": true,                      /* 'bind', 'call', 'apply' 메서드의 인수가 원래 함수와 일치하는지 확인합니다. */
+    // "strictPropertyInitialization": true,             /* 생성자에서 설정되지 않은 클래스 속성을 검사합니다. */
+    // "strictBuiltinIteratorReturn": true,              /* 내장 반복자가 'TReturn' 타입으로 'undefined' 대신 'any'를 사용하지 않도록 설정합니다. */
+    // "noImplicitThis": true,                           /* 'this'가 'any' 타입으로 추론되는 경우 오류를 보고합니다. */
+    // "useUnknownInCatchVariables": true,               /* catch 절의 변수 타입을 'any' 대신 'unknown'으로 설정합니다. */
+    // "alwaysStrict": true,                             /* 항상 'use strict'를 출력하도록 설정합니다. */
+    // "noUnusedLocals": true,                           /* 읽히지 않은 로컬 변수에 대해 오류를 보고합니다. */
+    // "noUnusedParameters": true,                       /* 읽히지 않은 함수 매개변수에 대해 오류를 보고합니다. */
+    // "exactOptionalPropertyTypes": true,               /* 선택적 속성 타입을 작성된 그대로 해석합니다. */
+    // "noImplicitReturns": true,                        /* 명시적으로 반환되지 않은 함수 경로에 대해 오류를 보고합니다. */
+    // "noFallthroughCasesInSwitch": true,               /* switch 문의 넘어가는 경우에 대해 오류를 보고합니다. */
+    // "noUncheckedIndexedAccess": true,                 /* 인덱스 사용 시 타입에 'undefined'를 추가합니다. */
+    // "noImplicitOverride": true,                       /* 파생 클래스에서 재정의된 멤버에 'override' 수정자를 요구합니다. */
+    // "noPropertyAccessFromIndexSignature": true,       /* 인덱스 타입으로 선언된 키에 대해 인덱스 접근자를 요구합니다. */
+    // "allowUnusedLabels": true,                        /* 사용되지 않는 레이블에 대한 오류 보고를 비활성화합니다. */
+    // "allowUnreachableCode": true,                     /* 도달할 수 없는 코드에 대한 오류 보고를 비활성화합니다. */
+
+    /* 완전성 */
+    // "skipDefaultLibCheck": true,                      /* 기본 포함된 .d.ts 파일에 대한 타입 검사를 생략합니다. */
+    "skipLibCheck": true                                 /* 모든 .d.ts 파일에 대한 타입 검사를 생략합니다. */
+  }
+}
