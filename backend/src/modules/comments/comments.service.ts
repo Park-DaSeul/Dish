@@ -1,29 +1,27 @@
 import * as commentRepository from './comments.repository.js';
-import * as dishRepository from './dishes.repository.js';
+import * as dishRepository from '../dishes/dishes.repository.js';
 import type { Prisma } from '@prisma/client';
-import type {
-  GetCommentsQuery,
-  GetCommentsRepositoryQuery,
-  CreateCommentData,
-  CreateCommentRepositoryData,
-  UpdateCommentData,
-} from './comments.dto.js';
+import type { FindCommentsQuery, CreateCommentData, UpdateCommentData } from './comments.dto.js';
 
 // 모든 댓글 조회 (특정요리)
-export const getComments = async (query: GetCommentsQuery, dishId: string) => {
+export const getComments = async (query: FindCommentsQuery, dishId: string) => {
   const { limit: take = 10, cursor, search } = query;
 
   // 페이지 네이션 커서방식
-  let where: Prisma.CommentWhereInput = {
-    dishId,
-  };
-  if (search) {
-    where = {
-      OR: [{ content: { contains: search, mode: 'insensitive' } }],
-    };
-  }
+  const searchFilter: Prisma.CommentWhereInput = search
+    ? {
+        OR: [{ content: { contains: search, mode: 'insensitive' } }],
+      }
+    : {};
 
-  const commentsQuery: GetCommentsRepositoryQuery = {
+  // where 조건 추가
+  const where: Prisma.CommentWhereInput = {
+    dishId,
+    ...searchFilter,
+  };
+
+  // query 구성
+  const findQuery: Prisma.CommentFindManyArgs = {
     where,
     take,
     skip: cursor ? 1 : 0,
@@ -31,12 +29,17 @@ export const getComments = async (query: GetCommentsQuery, dishId: string) => {
     orderBy: { createdAt: 'desc' },
   };
 
-  const comments = await commentRepository.getComments(commentsQuery);
+  const comments = await commentRepository.getComments(findQuery);
 
   const lastCommentInResults = comments[comments.length - 1];
   const nextCursor = lastCommentInResults ? lastCommentInResults.id : null;
 
-  return { comments, nextCursor };
+  const commentsData = {
+    comments,
+    nextCursor,
+  };
+
+  return commentsData;
 };
 
 // 특정 댓글 조회
@@ -55,10 +58,14 @@ export const createComment = async (dishId: string, userId: string, data: Create
   const dishData = await dishRepository.findDish(dishId);
   if (!dishData) throw new Error('요리 게시글을 찾을 수 없습니다.');
 
-  const createData: CreateCommentRepositoryData = {
+  const createData: Prisma.CommentCreateInput = {
     content,
-    dishId,
-    userId,
+    dish: {
+      connect: { id: dishId },
+    },
+    user: {
+      connect: { id: userId },
+    },
   };
 
   const comment = await commentRepository.createComment(createData);
@@ -76,7 +83,7 @@ export const updateComment = async (id: string, userId: string, data: UpdateComm
   if (commentData.userId !== userId) throw new Error('댓글을 수정할 권한이 없습니다.');
 
   // 기존 데이터와 새 데이터 비교
-  const updateData: Partial<UpdateCommentData> = {
+  const updateData: Prisma.CommentUpdateInput = {
     ...(content !== commentData.content && { content }),
   };
 

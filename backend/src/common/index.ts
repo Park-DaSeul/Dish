@@ -5,4 +5,10 @@ export * from './auth.js';
 export * from './prismaSelects.js';
 
 // validations.js에 있는 모든 함수들을 가져와서 내보냅니다.
-export * from './validations.js';
+// export * from './validations.js';
+
+// validations.id.js에 있는 함수들을 가져와서 내보냅니다.
+export * from './validations.id.js';
+
+// validations.query.js에 있는 모든 함수들을 가져와서 내보냅니다.
+export * from './validations.query.js';

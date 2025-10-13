@@ -1,26 +1,26 @@
 import express from 'express';
 import * as commentController from './comments.controller.js';
-import * as commentDto from './comments.dto.js';
-import { authenticate } from '../../middlewares/auth.middleware.js';
-import { validate } from '../../middlewares/validate.middleware.js';
+import { validateCreateBody, validateUpdateBody } from './comments.dto.js';
+import { validateId, validateDishId, validateGetQuery } from '../../common/index.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
+import passport from '../../libs/passport/index.js';
 
 const commentRouter = express.Router({ mergeParams: true });
 
 // --- 여기부터 로그인 필요 ---
-commentRouter.use(authenticate);
+commentRouter.use(passport.authenticate('access-token', { session: false }));
 
-// 댓글 생성, 특정 요리의 모든 댓글 조회
-commentRouter
-  .route('/')
-  .post(validate(commentDto.createComment), asyncHandler(commentController.createComment))
-  .get(validate(commentDto.getComments), asyncHandler(commentController.getComments));
+// 모든 댓글 조회 (특정요리)
+commentRouter.route('/').get(validateDishId, validateGetQuery, asyncHandler(commentController.getComments));
+
+// 댓글 생성
+commentRouter.route('/').post(validateDishId, validateCreateBody, asyncHandler(commentController.createComment));
 
 // 특정 댓글 조회, 수정, 삭제 (/:id)
 commentRouter
   .route('/:id')
-  .get(validate(commentDto.getCommentById), asyncHandler(commentController.getCommentById))
-  .put(validate(commentDto.updateComment), asyncHandler(commentController.updateComment))
-  .delete(validate(commentDto.deleteComment), asyncHandler(commentController.deleteComment));
+  .get(validateId, asyncHandler(commentController.getCommentById))
+  .put(validateId, validateUpdateBody, asyncHandler(commentController.updateComment))
+  .delete(validateId, asyncHandler(commentController.deleteComment));
 
 export { commentRouter };

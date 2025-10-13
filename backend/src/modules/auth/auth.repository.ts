@@ -1,12 +1,18 @@
 import prisma from '../../libs/prisma.js';
-import { meSelect } from '../../common/index.js';
 import type { CreateSignupData } from './auth.dto.js';
 
-// 회원 가입
+// 회원가입
 export const signup = async (createData: CreateSignupData) => {
   const user = await prisma.user.create({
     data: createData,
-    select: meSelect,
+    select: {
+      id: true,
+      name: true,
+      nickname: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
   return user;
 };

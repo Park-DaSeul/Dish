@@ -3,6 +3,7 @@ import { hashPassword } from '../../common/index.js';
 import { generateTokens } from '../../libs/token.js';
 import type { Tokens } from '../../libs/token.js';
 import type { CreateSignupData } from './auth.dto.js';
+import type { Prisma } from '@prisma/client';
 
 // 회원가입
 export const signup = async (data: CreateSignupData) => {
@@ -15,7 +16,7 @@ export const signup = async (data: CreateSignupData) => {
   // 비밀번호 해시 처리
   const hashedPassword = await hashPassword(password);
 
-  const createData: CreateSignupData = {
+  const createData: Prisma.UserCreateInput = {
     name,
     nickname,
     email,

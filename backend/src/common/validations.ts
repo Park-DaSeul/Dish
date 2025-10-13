@@ -1,16 +1,16 @@
 import { z } from 'zod';
 
 // id
-export const idSchema = z.uuid('유효한 ID를 입력하세요.');
+export const uuidSchema = z.uuid('유효한 ID를 입력하세요.');
 export const userIdSchema = z.uuid('유효한 사용자 ID를 입력하세요.');
 export const dishIdSchema = z.uuid('유효한 게시물 ID를 입력하세요.');
 
 // 페이지 네이션
 export const offsetSchema = z.coerce.number().min(1).max(100).default(0);
 export const limitSchema = z.coerce.number().min(1).max(100).default(10);
-export const orderSchema = z.string().optional();
-export const searchSchema = z.string().optional();
-export const cursorSchema = z.uuid().optional();
+export const orderSchema = z.string();
+export const searchSchema = z.string();
+export const cursorSchema = z.uuid();
 export const pageSchema = z.coerce.number().min(1).max(1000).default(1);
 
 // 공용
@@ -35,7 +35,7 @@ export const emailSchema = z.email('올바른 이메일 형식이 아닙니다.'
 export const contentShema = z
   .string()
   .min(1, '댓글은 최소 1글자 이상이어야 합니다.')
-  .max(600, '댓은 최대 500글자까지 가능합니다.');
+  .max(500, '댓글은 최대 500글자까지 가능합니다.');
 
 // dish
 export const titleSchema = z

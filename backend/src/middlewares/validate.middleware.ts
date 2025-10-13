@@ -1,46 +1,59 @@
 import type { Request, Response, NextFunction } from 'express';
 import type { ZodObject, ZodRawShape } from 'zod';
 
-export const validate = <
-  TParams extends ZodObject<ZodRawShape>,
-  TQuery extends ZodObject<ZodRawShape>,
-  TBody extends ZodObject<ZodRawShape>,
->(schemas: {
-  body?: TBody;
-  params?: TParams;
-  query?: TQuery;
-}) => {
-  return async (req: Request, _res: Response, next: NextFunction) => {
+export interface ValidatedRequest extends Request {
+  parsedParams?: unknown;
+  parsedBody?: unknown;
+  parsedQuery?: unknown;
+}
+
+export const validateParams = <TParams extends ZodObject<ZodRawShape>>(schema: TParams) => {
+  return async (req: ValidatedRequest, _res: Response, next: NextFunction) => {
     try {
-      req.validatedData = {};
-
-      if (schemas.body) {
-        const { success, data, error } = schemas.body.safeParse(req.body);
-        if (!success) {
-          return next(error);
-        }
-        req.validatedData.body = data;
+      const { success, data, error } = schema.safeParse(req.params);
+      if (!success) {
+        return next(error);
       }
 
-      if (schemas.query) {
-        const { success, data, error } = schemas.query.safeParse(req.query);
-        if (!success) {
-          return next(error);
-        }
-        req.validatedData.query = data;
-      }
-
-      if (schemas.params) {
-        const { success, data, error } = schemas.params.safeParse(req.params);
-        if (!success) {
-          return next(error);
-        }
-        req.validatedData.params = data;
-      }
+      req.parsedParams = data;
 
       next();
     } catch (err) {
-      next(err); // 예상 못한 에러도 전역 핸들러로 넘김
+      next(err);
+    }
+  };
+};
+
+export const validateQuery = <TQuery extends ZodObject<ZodRawShape>>(schema: TQuery) => {
+  return async (req: ValidatedRequest, _res: Response, next: NextFunction) => {
+    try {
+      const { success, data, error } = schema.safeParse(req.query);
+      if (!success) {
+        return next(error);
+      }
+
+      req.parsedQuery = data;
+
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
+};
+
+export const validateBody = <TBody extends ZodObject<ZodRawShape>>(schema: TBody) => {
+  return async (req: ValidatedRequest, _res: Response, next: NextFunction) => {
+    try {
+      const { success, data, error } = schema.safeParse(req.body);
+      if (!success) {
+        return next(error);
+      }
+
+      req.parsedBody = data;
+
+      next();
+    } catch (err) {
+      next(err);
     }
   };
 };

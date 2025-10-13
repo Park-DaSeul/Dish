@@ -1,92 +1,89 @@
 import { z } from 'zod';
-import type { Prisma } from '@prisma/client';
-import { idSchema, dishIdSchema, contentShema, limitSchema, pageSchema } from '../../common/validations.js';
+import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
+import { validateBody } from '../../middlewares/validate.middleware.js';
 
-export interface GetCommentsQuery {
-  cursor?: string;
+// ----------
+// |  TYPE  |
+// ----------
+
+// 모든 댓글 조회 (특정요리)
+export interface GetCommentsRequest extends ValidatedRequest {
+  parsedParams: {
+    dishId: string;
+  };
+  parsedQuery: FindCommentsQuery;
+}
+
+export interface FindCommentsQuery {
   limit?: number;
+  cursor?: string;
   search?: string;
 }
 
-export interface GetCommentsRepositoryQuery {
-  where: Prisma.CommentWhereInput;
-  take: number;
-  cursor?: Prisma.CommentWhereUniqueInput;
-  orderBy: Prisma.CommentOrderByWithRelationInput;
-  skip: number;
+// 특정 댓글 조회
+export interface GetCommentByIdRequest extends ValidatedRequest {
+  parsedParams: {
+    id: string;
+  };
+}
+
+// 댓글 생성
+export interface CreateCommentRequest extends ValidatedRequest {
+  parsedParams: {
+    dishId: string;
+  };
+  parsedBody: CreateCommentData;
 }
 
 export interface CreateCommentData {
   content: string;
 }
 
-export interface CreateCommentRepositoryData extends CreateCommentData {
-  dishId: string;
-  userId: string;
+// 댓글 수정
+export interface UpdateCommentRequest extends ValidatedRequest {
+  parsedParams: {
+    id: string;
+  };
+  parsedBody: UpdateCommentData;
 }
 
 export interface UpdateCommentData {
   content: string;
 }
 
-// 모든 댓글 조회 (특정요리) (query + params)
-export const getComments = {
-  query: z
-    .object({
-      page: pageSchema,
-      limit: limitSchema,
-    })
-    .strict(),
-  params: z
-    .object({
-      dishId: dishIdSchema,
-    })
-    .strict(),
-};
+// 댓글 삭제
+export interface DeleteCommentRequest extends ValidatedRequest {
+  parsedParams: {
+    id: string;
+  };
+}
 
-// 특정 댓글 조회 (params)
-export const getCommentById = {
-  params: z
-    .object({
-      id: idSchema,
-    })
-    .strict(),
-};
+// -----------------
+// |  ZOD SCHEMAS  |
+// -----------------
 
-// 댓글 생성 (params + body)
-export const createComment = {
-  params: z
-    .object({
-      dishId: dishIdSchema,
-    })
-    .strict(),
-  body: z
-    .object({
-      content: contentShema,
-    })
-    .strict(),
-};
+// comment
+export const contentShema = z
+  .string()
+  .min(1, '댓글은 최소 1글자 이상이어야 합니다.')
+  .max(500, '댓글은 최대 500글자까지 가능합니다.');
 
-// 댓글 수정 (params + body)
-export const updateComment = {
-  params: z
-    .object({
-      id: idSchema,
-    })
-    .strict(),
-  body: z
-    .object({
-      content: contentShema,
-    })
-    .partial()
-    .strict(),
-};
+// 댓글 생성
+export const createComment = z
+  .object({
+    content: contentShema,
+  })
+  .strict();
 
-// 댓글 삭제 (params)
-export const deleteComment = {
-  params: z
-    .object({
-      id: idSchema,
-    })
-    .strict(),
-};
+// 댓글 수정
+export const updateComment = createComment.partial();
+
+// ----------------
+// |  VALIDATORS  |
+// ----------------
+
+// 댓글 생성
+export const validateCreateBody = validateBody(createComment);
+
+// 댓글 수정
+export const validateUpdateBody = validateBody(updateComment);

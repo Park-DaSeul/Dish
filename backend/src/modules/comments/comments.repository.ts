@@ -1,12 +1,16 @@
 import prisma from '../../libs/prisma.js';
-import { commentSelect } from '../../common/index.js';
-import type { GetCommentsRepositoryQuery, CreateCommentRepositoryData, UpdateCommentData } from './comments.dto.js';
+import type { Prisma } from '@prisma/client';
 
 // 모든 댓글 조회 (특정요리)
-export const getComments = async (commentsQuery: GetCommentsRepositoryQuery) => {
+export const getComments = async (findQuery: Prisma.CommentFindManyArgs) => {
   const comments = await prisma.comment.findMany({
-    ...commentsQuery,
-    select: commentSelect,
+    ...findQuery,
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   return comments;
@@ -16,28 +20,43 @@ export const getComments = async (commentsQuery: GetCommentsRepositoryQuery) => 
 export const getCommentById = async (id: string) => {
   const comment = await prisma.comment.findUnique({
     where: { id },
-    select: commentSelect,
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   return comment;
 };
 
 // 댓글 생성
-export const createComment = async (createData: CreateCommentRepositoryData) => {
+export const createComment = async (createData: Prisma.CommentCreateInput) => {
   const comment = await prisma.comment.create({
     data: createData,
-    select: commentSelect,
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   return comment;
 };
 
 // 댓글 수정
-export const updateComment = async (id: string, updateData: Partial<UpdateCommentData>) => {
+export const updateComment = async (id: string, updateData: Prisma.CommentUpdateInput) => {
   const comment = await prisma.comment.update({
     where: { id },
     data: updateData,
-    select: commentSelect,
+    select: {
+      id: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 
   return comment;
