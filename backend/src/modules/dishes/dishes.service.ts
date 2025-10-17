@@ -1,9 +1,9 @@
 import * as dishRepository from './dishes.repository.js';
 import type { Prisma } from '@prisma/client';
-import type { FindDishesQuery, CreateDishData, UpdateDishData } from './dishes.dto.js';
+import type { GetDishesQuery, CreateDishData, UpdateDishData } from './dishes.dto.js';
 
 // 모든 요리 게시글 조회
-export const getDishes = async (query: FindDishesQuery) => {
+export const getDishes = async (query: GetDishesQuery) => {
   const { limit: take = 10, cursor, search } = query;
 
   // 페이지 네이션 커서방식
@@ -17,7 +17,7 @@ export const getDishes = async (query: FindDishesQuery) => {
     : {};
 
   // query 구성
-  const findQuery: Prisma.DishFindManyArgs = {
+  const getQuery: Prisma.DishFindManyArgs = {
     where,
     take,
     skip: cursor ? 1 : 0,
@@ -25,7 +25,7 @@ export const getDishes = async (query: FindDishesQuery) => {
     orderBy: { createdAt: 'desc' },
   };
 
-  const dishes = await dishRepository.getDishes(findQuery);
+  const dishes = await dishRepository.getDishes(getQuery);
 
   const lastDishInResults = dishes[dishes.length - 1];
   const nextCursor = lastDishInResults ? lastDishInResults.id : null;

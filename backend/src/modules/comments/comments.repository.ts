@@ -2,9 +2,9 @@ import prisma from '../../libs/prisma.js';
 import type { Prisma } from '@prisma/client';
 
 // 모든 댓글 조회 (특정요리)
-export const getComments = async (findQuery: Prisma.CommentFindManyArgs) => {
+export const getComments = async (getQuery: Prisma.CommentFindManyArgs) => {
   const comments = await prisma.comment.findMany({
-    ...findQuery,
+    ...getQuery,
     select: {
       id: true,
       content: true,

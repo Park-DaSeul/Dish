@@ -49,7 +49,7 @@ export const updateComment = async (req: UpdateCommentRequest, res: Response) =>
   if (!req.user) throw new Error('사용자 인증이 필요합니다.');
   const userId = req.user.id;
 
-  const data = req.body;
+  const data = req.parsedBody;
   const comment = await commentService.updateComment(id, userId, data);
   return res.json({ success: true, data: comment });
 };

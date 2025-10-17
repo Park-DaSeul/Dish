@@ -8,10 +8,10 @@ import { validateBody } from '../../middlewares/validate.middleware.js';
 
 // 모든 요리 게시글 조회
 export interface GetDishesRequest extends ValidatedRequest {
-  parsedQuery: FindDishesQuery;
+  parsedQuery: GetDishesQuery;
 }
 
-export interface FindDishesQuery {
+export interface GetDishesQuery {
   limit?: number;
   cursor?: string;
   search?: string;

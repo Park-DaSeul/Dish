@@ -1,10 +1,10 @@
 import * as commentRepository from './comments.repository.js';
 import * as dishRepository from '../dishes/dishes.repository.js';
 import type { Prisma } from '@prisma/client';
-import type { FindCommentsQuery, CreateCommentData, UpdateCommentData } from './comments.dto.js';
+import type { GetCommentsQuery, CreateCommentData, UpdateCommentData } from './comments.dto.js';
 
 // 모든 댓글 조회 (특정요리)
-export const getComments = async (query: FindCommentsQuery, dishId: string) => {
+export const getComments = async (query: GetCommentsQuery, dishId: string) => {
   const { limit: take = 10, cursor, search } = query;
 
   // 페이지 네이션 커서방식
@@ -21,7 +21,7 @@ export const getComments = async (query: FindCommentsQuery, dishId: string) => {
   };
 
   // query 구성
-  const findQuery: Prisma.CommentFindManyArgs = {
+  const getQuery: Prisma.CommentFindManyArgs = {
     where,
     take,
     skip: cursor ? 1 : 0,
@@ -29,7 +29,7 @@ export const getComments = async (query: FindCommentsQuery, dishId: string) => {
     orderBy: { createdAt: 'desc' },
   };
 
-  const comments = await commentRepository.getComments(findQuery);
+  const comments = await commentRepository.getComments(getQuery);
 
   const lastCommentInResults = comments[comments.length - 1];
   const nextCursor = lastCommentInResults ? lastCommentInResults.id : null;

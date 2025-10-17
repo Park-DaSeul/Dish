@@ -2,9 +2,9 @@ import prisma from '../../libs/prisma.js';
 import type { Prisma } from '@prisma/client';
 
 // 모든 요리 게시글 조회
-export const getDishes = async (findQuery: Prisma.DishFindManyArgs) => {
+export const getDishes = async (getQuery: Prisma.DishFindManyArgs) => {
   const dishes = await prisma.dish.findMany({
-    ...findQuery,
+    ...getQuery,
     select: {
       id: true,
       title: true,

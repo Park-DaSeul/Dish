@@ -11,10 +11,10 @@ export interface GetCommentsRequest extends ValidatedRequest {
   parsedParams: {
     dishId: string;
   };
-  parsedQuery: FindCommentsQuery;
+  parsedQuery: GetCommentsQuery;
 }
 
-export interface FindCommentsQuery {
+export interface GetCommentsQuery {
   limit?: number;
   cursor?: string;
   search?: string;
