@@ -72,32 +72,3 @@ export const recipesSchema = z
   )
   .min(1, '레시피는 최소 1개 이상이어야 합니다.')
   .max(10, '레시피는 최대 10개까지 가능합니다.');
-
-// ingredient
-export const ingredientsSchema = z
-  .array(z.string())
-  .min(1, '재료는 최소 1개 이상이어야 합니다.')
-  .max(30, '재료는 최대 30개까지 가능합니다.')
-  .transform((data) => {
-    return data.map((item) => {
-      // 정규 표현식을 사용하여 문자열을 name, quantity, unit으로 분리합니다.
-      // 예: "돼지고기 600g" -> name: "돼지고기", quantity: "600", unit: "g"
-      const regex = /^(.*?)\s*(\d+(?:\.\d+)?)\s*([a-zA-Z가-힣]+)?$/;
-      const match = item.trim().match(regex);
-
-      if (match) {
-        return {
-          name: match[1].trim(),
-          quantity: match[2],
-          unit: match[3] || null, // 단위가 없는 경우 null
-        };
-      } else {
-        // 정규식에 일치하지 않는 경우 전체를 이름으로 처리
-        return {
-          name: item.trim(),
-          quantity: null,
-          unit: null,
-        };
-      }
-    });
-  });

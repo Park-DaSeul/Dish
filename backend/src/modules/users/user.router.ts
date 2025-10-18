@@ -1,14 +1,22 @@
 import express from 'express';
-import * as userController from './users.controller.js';
-import { validateUpdateBody, validateDeleteBody } from './users.dto.js';
+import prisma from '../../libs/prisma.js';
+import { UserRepository } from './user.repository.js';
+import { UserService } from './user.service.js';
+import { UserController } from './user.controller.js';
+import { validateUpdateBody, validateDeleteBody } from './user.dto.js';
 import { validateId, validateGetOffsetQuery } from '../../common/index.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
-import passport from '../../libs/passport/index.js';
+import { authenticate } from '../../middlewares/auth.middleware.js';
 
 const userRouter = express.Router();
 
+// 의존성 주입
+const userRepository = new UserRepository(prisma);
+const userService = new UserService(userRepository);
+const userController = new UserController(userService);
+
 // --- 여기부터 로그인 필요 ---
-userRouter.use(passport.authenticate('access-token', { session: false }));
+userRouter.use(authenticate);
 
 // 모든 사용자 조회
 userRouter.get('/', validateGetOffsetQuery, asyncHandler(userController.getUsers));

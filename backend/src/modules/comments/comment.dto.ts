@@ -76,7 +76,7 @@ export const createComment = z
   .strict();
 
 // 댓글 수정
-export const updateComment = createComment.partial();
+export const updateComment = createComment;
 
 // ----------------
 // |  VALIDATORS  |

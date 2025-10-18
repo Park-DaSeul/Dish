@@ -74,7 +74,7 @@ export interface UpdateDishData {
 }
 
 // 요리 게시물 삭제
-export interface deleteDishRequest extends ValidatedRequest {
+export interface DeleteDishRequest extends ValidatedRequest {
   parsedParams: {
     id: string;
   };

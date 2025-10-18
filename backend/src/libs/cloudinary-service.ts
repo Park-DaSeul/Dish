@@ -20,8 +20,8 @@ export const createDownloadUrl = (publicId: string) => {
 export const deleteImageFromCloudinary = async (publicId: string) => {
   try {
     await cloudinary.uploader.destroy(publicId, {
-      type: 'authenticated',
-      resource_type: 'raw',
+      type: 'upload',
+      resource_type: 'image',
     });
     console.log(`롤백 성공: Cloudinary 사진 삭제 완료 - Public ID: ${publicId}`);
   } catch (err) {

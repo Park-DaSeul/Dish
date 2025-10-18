@@ -2,12 +2,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { errorHandler } from './middlewares/errorHandler.js';
-import { authRouter } from './modules/auth/auth.route.js';
-import { userRouter } from './modules/users/users.route.js';
-import { dishRouter } from './modules/dishes/dishes.route.js';
-import { imageRouter } from './modules/images/images.route.js';
-import { commentRouter } from './modules/comments/comments.route.js';
-import { likeRouter } from './modules/likes/likes.route.js';
+import { authRouter } from './modules/auth/auth.router.js';
+import { userRouter } from './modules/users/user.router.js';
+import { dishRouter } from './modules/dishes/dish.router.js';
+import { imageRouter } from './modules/images/image.router.js';
+import { commentRouter } from './modules/comments/comment.router.js';
+// import { likeRouter } from './modules/likes/like.router.js';
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ app.use('/api/users', userRouter);
 app.use('/api/dishes', dishRouter);
 app.use('/api/images', imageRouter);
 app.use('/api/comments', commentRouter);
-app.use('/api/likes', likeRouter);
+// app.use('/api/likes', likeRouter);
 
 app.use(errorHandler); //전역 에러핸들러
 
