@@ -10,22 +10,8 @@ export interface UploadRequest extends Request {
   };
 }
 
-// dish
-const dishOption: UploadApiOptions = {
-  resource_type: 'image',
-  folder: 'dishes',
-  type: 'upload',
-};
-
-// recipe
-const recipeOption: UploadApiOptions = {
-  resource_type: 'image',
-  folder: 'recipes',
-  type: 'upload',
-};
-
 // 스트리밍 업로드 미들웨어 팩토리 함수: 폴더명을 인수로 받습니다.
-const cloudinaryUploader = (option: UploadApiOptions) => {
+export const cloudinaryUploader = (option: UploadApiOptions) => {
   // 실제 미들웨어 함수
   return (req: UploadRequest, res: Response, next: NextFunction) => {
     // 10MB 제한
@@ -137,9 +123,6 @@ const cloudinaryUploader = (option: UploadApiOptions) => {
     req.pipe(busboy);
   };
 };
-
-export const dishImageUpload = cloudinaryUploader(dishOption);
-export const recipeImageUpload = cloudinaryUploader(recipeOption);
 
 // // 스트리밍 업로드 미들웨어 함수
 // export const cloudinaryStreamUploader = (req: UploadRequest, res: Response, next: NextFunction) => {

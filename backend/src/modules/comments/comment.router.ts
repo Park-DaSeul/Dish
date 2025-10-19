@@ -3,8 +3,13 @@ import prisma from '../../libs/prisma.js';
 import { CommentRepository } from './comment.repository.js';
 import { CommentService } from './comment.service.js';
 import { CommentController } from './comment.controller.js';
-import { validateCreateBody, validateUpdateBody } from './comment.dto.js';
-import { validateId, validateDishId, validateGetQuery } from '../../common/index.js';
+import {
+  validateId,
+  validateDishId,
+  validateGetQuery,
+  validateCreateBody,
+  validateUpdateBody,
+} from './comment.middleware.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authenticate } from '../../middlewares/auth.middleware.js';
 

@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
-import { validateBody } from '../../middlewares/validate.middleware.js';
 
 // ----------
 // |  TYPE  |
@@ -77,13 +76,3 @@ export const createComment = z
 
 // 댓글 수정
 export const updateComment = createComment;
-
-// ----------------
-// |  VALIDATORS  |
-// ----------------
-
-// 댓글 생성
-export const validateCreateBody = validateBody(createComment);
-
-// 댓글 수정
-export const validateUpdateBody = validateBody(updateComment);

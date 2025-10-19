@@ -1,8 +1,7 @@
 import { z } from 'zod';
-import { validateQuery } from '../middlewares/validate.middleware.js';
 
 // 커서 방식
-const cursorSchema = z
+export const cursorSchema = z
   .object({
     limit: z.coerce.number().min(1).max(100).default(10),
     cursor: z.uuid(),
@@ -11,10 +10,8 @@ const cursorSchema = z
   .partial()
   .strict();
 
-export const validateGetQuery = validateQuery(cursorSchema);
-
 // offset 방식
-const offsetSchema = z
+export const offsetSchema = z
   .object({
     limit: z.coerce.number().min(1).max(50).default(10),
     offset: z.coerce.number().min(0).default(0),
@@ -22,5 +19,3 @@ const offsetSchema = z
   })
   .partial()
   .strict();
-
-export const validateGetOffsetQuery = validateQuery(offsetSchema);

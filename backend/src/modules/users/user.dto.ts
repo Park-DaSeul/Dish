@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
-import { validateBody } from '../../middlewares/validate.middleware.js';
 
 // ----------
 // |  TYPE  |
@@ -84,13 +83,3 @@ export const deleteUser = z
     password: passwordSchema,
   })
   .strict();
-
-// ----------------
-// |  VALIDATORS  |
-// ----------------
-
-// 사용자 수정
-export const validateUpdateBody = validateBody(updateUser);
-
-// 사용자 삭제
-export const validateDeleteBody = validateBody(deleteUser);

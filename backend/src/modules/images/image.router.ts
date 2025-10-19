@@ -3,7 +3,7 @@ import prisma from '../../libs/prisma.js';
 import { ImageRepository } from './image.repository.js';
 import { ImageService } from './image.service.js';
 import { ImageController } from './image.controller.js';
-import { dishImageUpload, recipeImageUpload } from '../../middlewares/cloudinary.upload.middleware.js';
+import { dishImageUpload, recipeImageUpload } from './image.middleware.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authenticate } from '../../middlewares/auth.middleware.js';
 

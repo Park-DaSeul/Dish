@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
-import { validateBody } from '../../middlewares/validate.middleware.js';
 
 // ----------
 // |  TYPE  |
@@ -169,13 +168,3 @@ export const updateDish = z
     recipes: recipesUpdateSchema,
   })
   .strict();
-
-// ----------------
-// |  VALIDATORS  |
-// ----------------
-
-// 요리 게시글 생성
-export const validateCreateBody = validateBody(createDish);
-
-// 요리 게시글 수정
-export const validateUpdateBody = validateBody(updateDish);
