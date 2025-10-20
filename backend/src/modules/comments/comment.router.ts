@@ -9,6 +9,8 @@ import {
   validateGetQuery,
   validateCreateBody,
   validateUpdateBody,
+  checkDishExists,
+  ensureCommentOwner,
 } from './comment.middleware.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authenticate } from '../../middlewares/auth.middleware.js';
@@ -27,13 +29,15 @@ commentRouter.use(authenticate);
 commentRouter.route('/').get(validateDishId, validateGetQuery, asyncHandler(commentsController.getComments));
 
 // 댓글 생성
-commentRouter.route('/').post(validateDishId, validateCreateBody, asyncHandler(commentsController.createComment));
+commentRouter
+  .route('/')
+  .post(validateDishId, validateCreateBody, checkDishExists, asyncHandler(commentsController.createComment));
 
 // 특정 댓글 조회, 수정, 삭제 (/:id)
 commentRouter
   .route('/:id')
   .get(validateId, asyncHandler(commentsController.getCommentById))
-  .put(validateId, validateUpdateBody, asyncHandler(commentsController.updateComment))
+  .put(validateId, validateUpdateBody, ensureCommentOwner, asyncHandler(commentsController.updateComment))
   .delete(validateId, asyncHandler(commentsController.deleteComment));
 
 export { commentRouter };

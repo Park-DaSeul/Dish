@@ -16,7 +16,6 @@ export class CommentController {
     const query = req.parsedQuery;
 
     const { dishId } = req.parsedParams;
-    if (!dishId) throw new Error('요리 게시글 ID가 필요합니다.');
 
     const commentsData = await this.commentService.getComments(query, dishId);
     return res.json({ success: true, data: commentsData });
@@ -25,7 +24,6 @@ export class CommentController {
   // 특정 댓글 조회
   public getCommentById = async (req: GetCommentByIdRequest, res: Response) => {
     const { id } = req.parsedParams;
-    if (!id) throw new Error('댓글 ID가 필요합니다.');
 
     const comment = await this.commentService.getCommentById(id);
     return res.json({ success: true, data: comment });
@@ -34,9 +32,7 @@ export class CommentController {
   // 댓글 생성
   public createComment = async (req: CreateCommentRequest, res: Response) => {
     const { dishId } = req.parsedParams;
-    if (!dishId) throw new Error('요리 게시글 ID가 필요합니다.');
 
-    if (!req.user) throw new Error('사용자 인증이 필요합니다.');
     const userId = req.user.id;
 
     const data = req.parsedBody;
@@ -47,25 +43,19 @@ export class CommentController {
   // 댓글 수정
   public updateComment = async (req: UpdateCommentRequest, res: Response) => {
     const { id } = req.parsedParams;
-    if (!id) throw new Error('댓글 ID가 필요합니다.');
 
-    if (!req.user) throw new Error('사용자 인증이 필요합니다.');
-    const userId = req.user.id;
+    const resource = req.resource;
 
     const data = req.parsedBody;
-    const comment = await this.commentService.updateComment(id, userId, data);
+    const comment = await this.commentService.updateComment(id, data, resource);
     return res.json({ success: true, data: comment });
   };
 
   // 댓글 삭제
   public deleteComment = async (req: DeleteCommentRequest, res: Response) => {
     const { id } = req.parsedParams;
-    if (!id) throw new Error('댓글 ID가 필요합니다.');
 
-    if (!req.user) throw new Error('사용자 인증이 필요합니다.');
-    const userId = req.user.id;
-
-    await this.commentService.deleteComment(id, userId);
+    await this.commentService.deleteComment(id);
     return res.status(200).json({ success: true, message: '댓글이 삭제되었습니다.' });
   };
 }

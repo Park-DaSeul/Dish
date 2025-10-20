@@ -6,7 +6,6 @@ import { DishController } from './dish.controller.js';
 import { validateId, validateGetQuery, validateCreateBody, validateUpdateBody } from './dish.middleware.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authenticate } from '../../middlewares/auth.middleware.js';
-import { checkOwnership } from '../../middlewares/ownership.middleware.js';
 import { commentRouter } from '../comments/comment.router.js';
 
 const dishRouter = express.Router();
@@ -31,8 +30,8 @@ dishRouter.route('/').post(validateCreateBody, asyncHandler(dishController.creat
 // 특정 요리 게시글 수정, 삭제 (/:id)
 dishRouter
   .route('/:id')
-  .put(validateId, validateUpdateBody, checkOwnership(prisma.dish), asyncHandler(dishController.updateDish))
-  .delete(validateId, checkOwnership(prisma.dish), asyncHandler(dishController.deleteDish));
+  .put(validateId, validateUpdateBody, asyncHandler(dishController.updateDish))
+  .delete(validateId, asyncHandler(dishController.deleteDish));
 
 dishRouter.use('/:dishId/comments', commentRouter);
 
