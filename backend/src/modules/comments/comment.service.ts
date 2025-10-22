@@ -1,13 +1,14 @@
 import { CommentRepository } from './comment.repository.js';
 import type { Prisma } from '@prisma/client';
-import type { GetCommentsQuery, CreateCommentData, UpdateCommentData } from './comment.dto.js';
+import type { CreateCommentBody, UpdateCommentBody } from './comment.dto.js';
+import type { CursorQuery } from '../../common/index.js';
 import type { Comment } from '@prisma/client';
 
 export class CommentService {
   constructor(private commentRepository: CommentRepository) {}
 
   // 모든 댓글 조회 (특정요리)
-  public getComments = async (query: GetCommentsQuery, dishId: string) => {
+  public getComments = async (query: CursorQuery, dishId: string) => {
     const { limit: take = 10, cursor, search } = query;
 
     // 페이지 네이션 커서방식
@@ -48,13 +49,12 @@ export class CommentService {
   // 특정 댓글 조회
   public getCommentById = async (id: string) => {
     const comment = await this.commentRepository.getCommentById(id);
-    if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
 
     return comment;
   };
 
   // 댓글 생성
-  public createComment = async (dishId: string, userId: string, data: CreateCommentData) => {
+  public createComment = async (dishId: string, userId: string, data: CreateCommentBody) => {
     const { content } = data;
 
     const createData: Prisma.CommentCreateInput = {
@@ -73,7 +73,7 @@ export class CommentService {
   };
 
   // 댓글 수정
-  public updateComment = async (id: string, data: UpdateCommentData, resource: Comment) => {
+  public updateComment = async (id: string, data: UpdateCommentBody, resource: Comment) => {
     const { content } = data;
 
     // 댓글 존재 확인

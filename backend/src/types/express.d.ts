@@ -9,6 +9,6 @@ import { User as PrismaUser } from '@prisma/client';
 //   }
 // }
 
-// declare global {
-//   var prisma: PrismaClient;
-// }
+declare global {
+  var prisma: PrismaClient;
+}

@@ -1,6 +1,6 @@
 import { AuthRepository } from './auth.repository.js';
 import type { Prisma } from '@prisma/client';
-import type { CreateSignupData } from './auth.dto.js';
+import type { SignupBody } from './auth.dto.js';
 import { hashPassword } from '../../common/index.js';
 import { generateTokens } from '../../libs/token.js';
 import type { Tokens } from '../../libs/token.js';
@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private authRepository: AuthRepository) {}
 
   // 회원가입
-  public signup = async (data: CreateSignupData) => {
+  public signup = async (data: SignupBody) => {
     const { name, nickname, email, password } = data;
 
     // 이메일 중복 확인

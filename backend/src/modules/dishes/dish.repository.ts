@@ -214,35 +214,4 @@ export class DishRepository {
       where: { id },
     });
   };
-
-  // 요리 게시글 존재 확인
-  public findDish = async (id: string) => {
-    const dish = await this.prisma.dish.findUnique({
-      where: { id },
-    });
-
-    return dish;
-  };
-
-  // 요리 게시글 존재 및 관계 확인
-  public findDishWithRelations = async (id: string) => {
-    const dish = await this.prisma.dish.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        dishIngredient: true,
-        userId: true,
-        recipes: {
-          select: {
-            id: true,
-            instruction: true,
-          },
-        },
-      },
-    });
-
-    return dish;
-  };
 }

@@ -10,7 +10,7 @@ import {
   validateCreateBody,
   validateUpdateBody,
   checkDishExists,
-  ensureCommentOwner,
+  checkCommentOwner,
 } from './comment.middleware.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authenticate } from '../../middlewares/auth.middleware.js';
@@ -37,7 +37,7 @@ commentRouter
 commentRouter
   .route('/:id')
   .get(validateId, asyncHandler(commentsController.getCommentById))
-  .put(validateId, validateUpdateBody, ensureCommentOwner, asyncHandler(commentsController.updateComment))
-  .delete(validateId, asyncHandler(commentsController.deleteComment));
+  .put(validateId, validateUpdateBody, checkCommentOwner, asyncHandler(commentsController.updateComment))
+  .delete(validateId, checkCommentOwner, asyncHandler(commentsController.deleteComment));
 
 export { commentRouter };

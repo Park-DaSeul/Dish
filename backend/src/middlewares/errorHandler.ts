@@ -34,7 +34,8 @@ export const errorHandler = (err: unknown, _req: Request, res: Response, _next: 
         });
       // 다른 Prisma 에러 코드에 대한 케이스를 추가할 수 있습니다.
       default:
-        // 처리되지 않은 다른 Prisma 에러
+        // 처리되지 않은 다른 Prisma 에러는 500으로 처리 (내부 정보 노출 방지)
+        console.error(`DATABASE ERROR [${err.code}]:`, err);
         return res.status(500).json({
           error: 'Database Error',
           message: '데이터베이스 작업 중 오류가 발생했습니다.',
@@ -54,6 +55,10 @@ export const errorHandler = (err: unknown, _req: Request, res: Response, _next: 
   }
 
   // 알 수 없는 에러 처리
+  // 그 외 모든 예외적인 에러 (처리되지 않은 프로그래밍 에러)
+  // 서버 크래시를 막고 로그를 남긴 후 500 응답
+  console.error('UNHANDLED SERVER ERROR:', err);
+
   return res.status(500).json({
     error: 'Internal Server Error',
     message: '서버에서 알 수 없는 오류가 발생했습니다.',

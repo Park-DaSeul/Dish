@@ -22,7 +22,6 @@ export class DishController {
   // 특정 요리 게시물 조회
   public getDishById = async (req: GetDishByIdRequest, res: Response) => {
     const { id } = req.parsedParams;
-    if (!id) throw new Error('요리 게시글 ID가 필요합니다.');
 
     const dish = await this.dishService.getDishById(id);
     return res.json({ success: true, data: dish });
@@ -30,7 +29,6 @@ export class DishController {
 
   // 요리 게시물 생성
   public createDish = async (req: CreateDishRequest, res: Response) => {
-    if (!req.user) throw new Error('사용자 인증이 필요합니다.');
     const userId = req.user.id;
 
     const data = req.parsedBody;
@@ -41,25 +39,19 @@ export class DishController {
   // 요리 게시물 수정
   public updateDish = async (req: UpdateDishRequest, res: Response) => {
     const { id } = req.parsedParams;
-    if (!id) throw new Error('요리 게시글 ID가 필요합니다.');
 
-    if (!req.user) throw new Error('사용자 인증이 필요합니다.');
-    const userId = req.user.id;
+    const resource = req.resource;
 
     const data = req.parsedBody;
-    const dish = await this.dishService.updateDish(id, userId, data);
+    const dish = await this.dishService.updateDish(id, data, resource);
     return res.json({ success: true, data: dish });
   };
 
   // 요리 게시물 삭제
   public deleteDish = async (req: DeleteDishRequest, res: Response) => {
     const { id } = req.parsedParams;
-    if (!id) throw new Error('요리 게시글 ID가 필요합니다.');
 
-    if (!req.user) throw new Error('사용자 인증이 필요합니다.');
-    const userId = req.user.id;
-
-    await this.dishService.deleteDish(id, userId);
+    await this.dishService.deleteDish(id);
     return res.status(200).json({ success: true, message: '요리 게시글이 삭제되었습니다.' });
   };
 }

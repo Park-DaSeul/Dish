@@ -1,52 +1,34 @@
 import { z } from 'zod';
-import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
+import type { AuthenticatedRequest } from '../../middlewares/auth.middleware.js';
+import type { OffsetQuery } from '../../common/index.js';
 
 // ----------
 // |  TYPE  |
 // ----------
 
 // 모든 사용자 조회
-export interface GetUsersRequest extends ValidatedRequest {
-  parsedQuery: GetUsersQuery;
-}
-
-export interface GetUsersQuery {
-  limit?: number;
-  offset?: number;
-  search?: string;
+export interface GetUsersRequest extends AuthenticatedRequest {
+  parsedQuery: OffsetQuery;
 }
 
 // 특정 사용자 조회
-export interface GetUserByIdRequest extends ValidatedRequest {
-  parsedParams: {
-    id: string;
-  };
-}
+export interface GetUserByIdRequest extends AuthenticatedRequest {}
+
 // 사용자 수정
-export interface UpdateUserRequest extends ValidatedRequest {
-  parsedParams: {
-    id: string;
-  };
-  parsedBody: UpdateUserData;
+export interface UpdateUserRequest extends AuthenticatedRequest {
+  parsedBody: UpdateUserBody;
 }
 
-export interface UpdateUserData {
-  name: string;
-  nickname: string;
-  password: string;
-  newPassword?: string;
-}
+// export interface UpdateUserData {
+//   name: string;
+//   nickname: string;
+//   password: string;
+//   newPassword?: string;
+// }
 
 // 사용자 삭제
-export interface DeleteUserRequest extends ValidatedRequest {
-  parsedParams: {
-    id: string;
-  };
-  parsedBody: DeleteUserData;
-}
-
-export interface DeleteUserData {
-  password: string;
+export interface DeleteUserRequest extends AuthenticatedRequest {
+  parsedBody: DeleteUserBody;
 }
 
 // -----------------
@@ -77,9 +59,13 @@ export const updateUser = z
   })
   .strict();
 
+export type UpdateUserBody = z.infer<typeof updateUser>;
+
 // 사용자 삭제
 export const deleteUser = z
   .object({
     password: passwordSchema,
   })
   .strict();
+
+export type DeleteUserBody = z.infer<typeof deleteUser>;

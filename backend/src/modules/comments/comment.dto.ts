@@ -1,8 +1,6 @@
 import { z } from 'zod';
-import { idSchema, dishIdSchema, cursorSchema } from '../../common/index.js';
 import type { AuthenticatedRequest } from '../../middlewares/auth.middleware.js';
-// import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
-import type { ResourceWithRequest } from '../../middlewares/ownership.middleware.js';
+import type { IdParams, DishIdParams, CursorQuery } from '../../common/index.js';
 import type { Comment } from '@prisma/client';
 
 // ----------
@@ -10,47 +8,47 @@ import type { Comment } from '@prisma/client';
 // ----------
 
 // 모든 댓글 조회 (특정요리)
-export type GetCommentsRequest = AuthenticatedRequest & {
-  parsedParams: GetCommentsParams;
-  parsedQuery: GetCommentsQuery;
-};
+export interface GetCommentsRequest extends AuthenticatedRequest {
+  parsedParams: DishIdParams;
+  parsedQuery: CursorQuery;
+}
 
 // export interface GetCommentsQuery {
-//   limit?: number;
+//   limit: number;
 //   cursor?: string;
 //   search?: string;
 // }
 
 // 특정 댓글 조회
-export type GetCommentByIdRequest = AuthenticatedRequest & {
-  parsedParams: IdCommentParams;
-};
+export interface GetCommentByIdRequest extends AuthenticatedRequest {
+  parsedParams: IdParams;
+}
 
 // 댓글 생성
-export type CreateCommentRequest = AuthenticatedRequest & {
-  parsedParams: CreateCommentParams;
+export interface CreateCommentRequest extends AuthenticatedRequest {
+  parsedParams: DishIdParams;
   parsedBody: CreateCommentBody;
-};
-
-export interface CreateCommentData {
-  content: string;
 }
+
+// export interface CreateCommentData {
+//   content: string;
+// }
 
 // 댓글 수정
-export type UpdateCommentRequest = AuthenticatedRequest & {
-  parsedParams: IdCommentParams;
+export interface UpdateCommentRequest extends AuthenticatedRequest {
+  parsedParams: IdParams;
   parsedBody: UpdateCommentBody;
   resource: Comment;
-};
-
-export interface UpdateCommentData {
-  content: string;
 }
 
+// export interface UpdateCommentData {
+//   content: string;
+// }
+
 // 댓글 삭제
-export type DeleteCommentRequest = AuthenticatedRequest & {
-  parsedParams: DeleteCommentParams;
-};
+export interface DeleteCommentRequest extends AuthenticatedRequest {
+  parsedParams: IdParams;
+}
 
 // -----------------
 // |  ZOD SCHEMAS  |
@@ -69,27 +67,9 @@ export const createComment = z
   })
   .strict();
 
+export type CreateCommentBody = z.infer<typeof createComment>;
+
 // 댓글 수정
 export const updateComment = createComment;
 
-// =================================================================
-// NEW ZOD-BASED SCHEMAS AND TYPES FOR REFACTORING
-// =================================================================
-
-// 모든 댓글 조회 (특정요리)
-export type GetCommentsParams = z.infer<typeof dishIdSchema>;
-
-export type GetCommentsQuery = z.infer<typeof cursorSchema>;
-
-// POST /dishes/:dishId/comments - 댓글 생성
-export type CreateCommentParams = z.infer<typeof dishIdSchema>;
-
-export type CreateCommentBody = z.infer<typeof createComment>;
-
-// PUT /comments/:commentId - 댓글 수정
-export type IdCommentParams = z.infer<typeof idSchema>;
-
 export type UpdateCommentBody = z.infer<typeof updateComment>;
-
-// DELETE /comments/:commentId - 댓글 삭제
-export type DeleteCommentParams = z.infer<typeof idSchema>;

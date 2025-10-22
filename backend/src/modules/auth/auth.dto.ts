@@ -1,20 +1,24 @@
 import { z } from 'zod';
-import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
+import type { Request } from 'express';
+import type { AuthenticatedRequest } from '../../middlewares/auth.middleware.js';
 
 // ----------
 // |  TYPE  |
 // ----------
 
 // 회원가입
-export interface SignupRequest extends ValidatedRequest {
-  parsedBody: CreateSignupData;
+export interface SignupRequest extends Request {
+  parsedBody: SignupBody;
 }
 
-export interface CreateSignupData {
-  name: string;
-  nickname: string;
-  email: string;
-  password: string;
+// 로그인
+export interface LoginRequest extends AuthenticatedRequest {
+  parsedBody: LoginBody;
+}
+
+// 토큰 재발급
+export interface RefreshRequest extends AuthenticatedRequest {
+  parsedBody: RefreshBody;
 }
 
 // -----------------
@@ -45,6 +49,8 @@ export const signup = z
   })
   .strict();
 
+export type SignupBody = z.infer<typeof signup>;
+
 // 로그인
 export const login = z
   .object({
@@ -53,5 +59,9 @@ export const login = z
   })
   .strict();
 
+export type LoginBody = z.infer<typeof login>;
+
 // 토큰 재발급
 export const refresh = z.object({}).strict();
+
+export type RefreshBody = z.infer<typeof refresh>;

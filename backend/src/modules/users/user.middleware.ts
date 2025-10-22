@@ -17,3 +17,7 @@ export const validateUpdateBody = validateBody(updateUser);
 
 // 사용자 삭제
 export const validateDeleteBody = validateBody(deleteUser);
+
+// -------------------
+// |  Authorization  |
+// -------------------

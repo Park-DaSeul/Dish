@@ -1,82 +1,69 @@
 import { z } from 'zod';
-import type { ValidatedRequest } from '../../middlewares/validate.middleware.js';
+import type { AuthenticatedRequest } from '../../middlewares/auth.middleware.js';
+import type { IdParams, CursorQuery } from '../../common/index.js';
+import type { Dish } from '@prisma/client';
 
 // ----------
 // |  TYPE  |
 // ----------
 
 // 모든 요리 게시글 조회
-export interface GetDishesRequest extends ValidatedRequest {
-  parsedQuery: GetDishesQuery;
-}
-
-export interface GetDishesQuery {
-  limit?: number;
-  cursor?: string;
-  search?: string;
+export interface GetDishesRequest extends AuthenticatedRequest {
+  parsedQuery: CursorQuery;
 }
 
 // 특정 요리 게시물 조회
-export interface GetDishByIdRequest extends ValidatedRequest {
-  parsedParams: {
-    id: string;
-  };
+export interface GetDishByIdRequest extends AuthenticatedRequest {
+  parsedParams: IdParams;
 }
 
 // 요리 게시글 생성
-export interface CreateDishRequest extends ValidatedRequest {
-  parsedBody: CreateDishData;
+export interface CreateDishRequest extends AuthenticatedRequest {
+  parsedBody: CreateDishBody;
 }
 
-interface RecipeInput {
-  stepNumber: number;
-  instruction: string;
-}
-interface DishImageInput {
-  id: string;
-}
-interface RecipeImageInput {
-  id: string;
-}
+// interface RecipeInput {
+//   stepNumber: number;
+//   instruction: string;
+// }
+// interface DishImageInput {
+//   id: string;
+// }
+// interface RecipeImageInput {
+//   id: string;
+// }
 
-export interface CreateDishData {
-  title: string;
-  description: string;
-  dishIngredient: string;
-  dishImages: DishImageInput[];
-  recipeImages: RecipeImageInput[];
-  recipes: RecipeInput[];
-}
-
-export interface CreateDishRepositoryData extends CreateDishData {
-  userId: string;
-}
+// export interface CreateDishData {
+//   title: string;
+//   description: string;
+//   dishIngredient: string;
+//   dishImages: DishImageInput[];
+//   recipeImages: RecipeImageInput[];
+//   recipes: RecipeInput[];
+// }
 
 // 요리 게시물 수정
-export interface UpdateDishRequest extends ValidatedRequest {
-  parsedParams: {
-    id: string;
-  };
-  parsedBody: UpdateDishData;
+export interface UpdateDishRequest extends AuthenticatedRequest {
+  parsedParams: IdParams;
+  parsedBody: UpdateDishBody;
+  resource: Dish;
 }
 
-interface RecipeUpdateInput {
-  id: string;
-  instruction: string;
-}
+// interface RecipeUpdateInput {
+//   id: string;
+//   instruction: string;
+// }
 
-export interface UpdateDishData {
-  title: string;
-  description: string;
-  dishIngredient: string;
-  recipes: RecipeUpdateInput[];
-}
+// export interface UpdateDishData {
+//   title: string;
+//   description: string;
+//   dishIngredient: string;
+//   recipes: RecipeUpdateInput[];
+// }
 
 // 요리 게시물 삭제
-export interface DeleteDishRequest extends ValidatedRequest {
-  parsedParams: {
-    id: string;
-  };
+export interface DeleteDishRequest extends AuthenticatedRequest {
+  parsedParams: IdParams;
 }
 
 // -----------------
@@ -154,10 +141,12 @@ export const createDish = z
     description: descriptionSchema,
     dishIngredient: dishIngredientSchema,
     dishImages: dishImagesSchema,
-    ecipeImages: recipeImagesSchema,
+    recipeImages: recipeImagesSchema,
     recipes: recipesSchema,
   })
   .strict();
+
+export type CreateDishBody = z.infer<typeof createDish>;
 
 // 요리 게시글 수정
 export const updateDish = z
@@ -168,3 +157,5 @@ export const updateDish = z
     recipes: recipesUpdateSchema,
   })
   .strict();
+
+export type UpdateDishBody = z.infer<typeof updateDish>;

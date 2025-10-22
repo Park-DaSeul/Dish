@@ -25,8 +25,8 @@ export const validateUpdateBody = validateBody(updateComment);
 // |  Authorization  |
 // -------------------
 
-// 댓글 생성
+// 존재 확인
 export const checkDishExists = checkResourceExists(prisma.dish, 'dishId');
 
-// 댓글 수정
-export const ensureCommentOwner = checkOwnership(prisma.comment);
+// 인가
+export const checkCommentOwner = checkOwnership(prisma.comment);

@@ -1,12 +1,14 @@
 import { DishRepository } from './dish.repository.js';
 import type { Prisma } from '@prisma/client';
-import type { GetDishesQuery, CreateDishData, UpdateDishData } from './dish.dto.js';
+import type { CreateDishBody, UpdateDishBody } from './dish.dto.js';
+import type { CursorQuery } from '../../common/index.js';
+import type { Dish } from '@prisma/client';
 
 export class DishService {
   constructor(private dishRepository: DishRepository) {}
 
   // 모든 요리 게시글 조회
-  public getDishes = async (query: GetDishesQuery) => {
+  public getDishes = async (query: CursorQuery) => {
     const { limit: take = 10, cursor, search } = query;
 
     // 페이지 네이션 커서방식
@@ -44,13 +46,12 @@ export class DishService {
   // 특정 요리 게시글 조회
   public getDishById = async (id: string) => {
     const dish = await this.dishRepository.getDishById(id);
-    if (!dish) throw new Error('요리 게시글을 찾을 수 없습니다.');
 
     return dish;
   };
 
   // 요리 게시글 생성
-  public createDish = async (userId: string, data: CreateDishData) => {
+  public createDish = async (userId: string, data: CreateDishBody) => {
     const { title, description, dishIngredient, dishImages, recipeImages, recipes } = data;
 
     // recipes 안에 recipesImages 각각 대입
@@ -93,13 +94,8 @@ export class DishService {
   };
 
   // 요리 게시글 수정
-  public updateDish = async (id: string, userId: string, data: UpdateDishData) => {
+  public updateDish = async (id: string, data: UpdateDishBody, resource: Dish) => {
     const { title, description, dishIngredient, recipes } = data;
-
-    // 요리 게시글 존재 확인
-    const dishData = await this.dishRepository.findDish(id);
-    if (!dishData) throw new Error('요리 게시글을 찾을 수 없습니다.');
-    if (dishData.userId !== userId) throw new Error('요리 게시글을 수정할 권한이 없습니다.');
 
     const recipesData = recipes.map((recipe) => {
       return {
@@ -115,9 +111,9 @@ export class DishService {
 
     // 기존 데이터와 새 데이터 비교
     const updateData: Prisma.DishUpdateInput = {
-      ...(title !== dishData.title && { title }),
-      ...(description !== dishData.description && { description }),
-      ...(dishIngredient !== dishData.dishIngredient && { dishIngredient }),
+      ...(title !== resource.title && { title }),
+      ...(description !== resource.description && { description }),
+      ...(dishIngredient !== resource.dishIngredient && { dishIngredient }),
       recipes: {
         updateMany: recipesData,
       },
@@ -133,12 +129,7 @@ export class DishService {
   };
 
   // 요리 게시글 삭제
-  public deleteDish = async (id: string, userId: string) => {
-    // 요리 게시글 존재 확인
-    const dishData = await this.dishRepository.findDish(id);
-    if (!dishData) throw new Error('요리 게시글을 찾을 수 없습니다.');
-    if (dishData.userId !== userId) throw new Error('요리 게시글을 삭제할 권한이 없습니다.');
-
+  public deleteDish = async (id: string) => {
     return await this.dishRepository.deleteDish(id);
   };
 }

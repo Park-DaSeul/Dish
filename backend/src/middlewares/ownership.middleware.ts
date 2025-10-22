@@ -1,41 +1,24 @@
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type { Request, RequestHandler } from 'express';
 import { StatusCodes } from 'http-status-codes';
 
 // Prisma Delegate 타입을 정의하여 prisma.dish 또는 prisma.comment와 같은 객체의 타입을 나타냅니다.
 // findUnique 메소드를 포함해야 합니다.
-type PrismaDelegate = {
+interface PrismaDelegate {
   findUnique: (args: { where: { id: string } }) => Promise<any>;
   model?: { name: string }; // 모델 이름에 접근하기 위해 추가 (에러 메시지용)
-};
+}
 
-type OwnershipRequest = Request & {
+export interface OwnershipRequest extends Request {
   user: { id: string };
   parsedParams: { id: string };
-};
+}
 
-type ResourceExistsRequest = Request & {
+export interface ResourceExistsRequest extends Request {
   parsedParams: Record<string, string>;
-};
+}
 
 export type ResourceWithRequest<T, TReq extends Request> = TReq & { resource: T };
 
-// export interface ValidatedIdRequest extends Request {
-//   parsedParams?: {
-//     id: string;
-//   };
-// }
-
-// export interface ValidateDynamicIdRequest extends Request {
-//   parsedParams?: Record<string, string>;
-// }
-
-// 제네릭을 사용하여 특정 리소스 타입을 가진 Request 객체의 타입을 정의합니다.
-// export interface ResourceWithRequest<T> extends ValidatedIdRequest {
-//   resource: T; // 이제 optional이 아니며, 미들웨어를 통과하면 항상 존재합니다.
-// }
-
-// 제네릭 <T>는 userId 속성을 가진 객체여야 함을 명시합니다.
-// delegate 인자로는 prisma.dish 또는 prisma.comment와 같은 Prisma Delegate를 받습니다.
 export const checkOwnership = <T extends { userId: string }>(
   delegate: PrismaDelegate,
 ): RequestHandler<any, any, any, any, OwnershipRequest> => {
@@ -109,3 +92,21 @@ export const checkResourceExists = (
     }
   };
 };
+
+// export interface ValidatedIdRequest extends Request {
+//   parsedParams?: {
+//     id: string;
+//   };
+// }
+
+// export interface ValidateDynamicIdRequest extends Request {
+//   parsedParams?: Record<string, string>;
+// }
+
+// 제네릭을 사용하여 특정 리소스 타입을 가진 Request 객체의 타입을 정의합니다.
+// export interface ResourceWithRequest<T> extends ValidatedIdRequest {
+//   resource: T; // 이제 optional이 아니며, 미들웨어를 통과하면 항상 존재합니다.
+// }
+
+// 제네릭 <T>는 userId 속성을 가진 객체여야 함을 명시합니다.
+// delegate 인자로는 prisma.dish 또는 prisma.comment와 같은 Prisma Delegate를 받습니다.

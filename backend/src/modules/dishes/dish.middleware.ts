@@ -1,6 +1,8 @@
 import { validateParams, validateQuery, validateBody } from '../../middlewares/validate.middleware.js';
 import { createDish, updateDish } from './dish.dto.js';
 import { idSchema, cursorSchema } from '../../common/index.js';
+import { checkOwnership } from '../../middlewares/ownership.middleware.js';
+import prisma from '../../libs/prisma.js';
 
 // ----------------
 // |  VALIDATORS  |
@@ -17,3 +19,10 @@ export const validateCreateBody = validateBody(createDish);
 
 // 요리 게시글 수정
 export const validateUpdateBody = validateBody(updateDish);
+
+// -------------------
+// |  Authorization  |
+// -------------------
+
+// 인가
+export const checkDishOwner = checkOwnership(prisma.dish);

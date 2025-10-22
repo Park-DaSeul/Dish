@@ -6,9 +6,9 @@ import type { User } from '@prisma/client';
  * 인증 미들웨어를 통과한 요청을 나타내는 타입입니다.
  * 기본 Request 타입에 'user' 속성이 반드시 존재함을 보장합니다.
  */
-export type AuthenticatedRequest = Request & {
+export interface AuthenticatedRequest extends Request {
   user: User;
-};
+}
 
 // 인증
 export const authenticate = (req: Request, res: Response, next: NextFunction) => {

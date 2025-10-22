@@ -7,9 +7,13 @@ export const idSchema = z
   })
   .strict();
 
+export type IdParams = z.infer<typeof idSchema>;
+
 // dishId
 export const dishIdSchema = z
   .object({
     dishId: z.uuid('유효한 ID를 입력하세요.'),
   })
   .strict();
+
+export type DishIdParams = z.infer<typeof dishIdSchema>;

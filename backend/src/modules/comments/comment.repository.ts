@@ -70,22 +70,4 @@ export class CommentRepository {
       where: { id },
     });
   };
-
-  // 댓글 존재 확인
-  public findComment = async (id: string) => {
-    const comment = await this.prisma.comment.findUnique({
-      where: { id },
-    });
-
-    return comment;
-  };
-
-  // 요리 게시글 존재 확인
-  public findDish = async (id: string) => {
-    const dish = await this.prisma.dish.findUnique({
-      where: { id },
-    });
-
-    return dish;
-  };
 }

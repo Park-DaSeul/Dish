@@ -10,6 +10,8 @@ export const cursorSchema = z
   .partial()
   .strict();
 
+export type CursorQuery = z.infer<typeof cursorSchema>;
+
 // offset 방식
 export const offsetSchema = z
   .object({
@@ -19,3 +21,5 @@ export const offsetSchema = z
   })
   .partial()
   .strict();
+
+export type OffsetQuery = z.infer<typeof offsetSchema>;

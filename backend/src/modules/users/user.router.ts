@@ -3,7 +3,7 @@ import prisma from '../../libs/prisma.js';
 import { UserRepository } from './user.repository.js';
 import { UserService } from './user.service.js';
 import { UserController } from './user.controller.js';
-import { validateId, validateGetQuery, validateUpdateBody, validateDeleteBody } from './user.middleware.js';
+import { validateGetQuery, validateUpdateBody, validateDeleteBody } from './user.middleware.js';
 import { asyncHandler } from '../../utils/asyncHandler.js';
 import { authenticate } from '../../middlewares/auth.middleware.js';
 
@@ -22,9 +22,9 @@ userRouter.get('/', validateGetQuery, asyncHandler(userController.getUsers));
 
 // 특정 사용자 조회, 수정, 삭제 (/:id)
 userRouter
-  .route('/:id')
-  .get(validateId, asyncHandler(userController.getUserById))
-  .put(validateId, validateUpdateBody, asyncHandler(userController.updateUser))
-  .delete(validateId, validateDeleteBody, asyncHandler(userController.deleteUser));
+  .route('/me')
+  .get(asyncHandler(userController.getUserById))
+  .put(validateUpdateBody, asyncHandler(userController.updateUser))
+  .delete(validateDeleteBody, asyncHandler(userController.deleteUser));
 
 export { userRouter };

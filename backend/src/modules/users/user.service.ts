@@ -1,13 +1,15 @@
 import { UserRepository } from './user.repository.js';
 import type { Prisma } from '@prisma/client';
-import type { GetUsersQuery, UpdateUserData, DeleteUserData } from './user.dto.js';
+import type { UpdateUserBody, DeleteUserBody } from './user.dto.js';
+import type { OffsetQuery } from '../../common/index.js';
+import type { User } from '@prisma/client';
 import { verifyPassword, hashPassword } from '../../common/index.js';
 
 export class UserService {
   constructor(private userRepository: UserRepository) {}
 
   // 모든 사용자 조회
-  public getUsers = async (query: GetUsersQuery) => {
+  public getUsers = async (query: OffsetQuery) => {
     const { limit: take = 10, offset: skip = 0, search } = query;
 
     // 페이지 네이션 offset 방식
@@ -38,25 +40,23 @@ export class UserService {
   // 특정 사용자 조회
   public getUserById = async (id: string) => {
     const user = await this.userRepository.getUserById(id);
-    if (!user) throw new Error('사용자를 찾을 수 없습니다.');
 
     return user;
   };
 
   // 사용자 수정
-  public updateUser = async (id: string, data: UpdateUserData) => {
+  public updateUser = async (id: string, data: UpdateUserBody, resource: User) => {
     const { name, nickname, password, newPassword } = data;
-    // 사용자 확인
-    const userData = await this.userRepository.findUser(id);
-    if (!userData) throw new Error('사용자를 찾을 수 없습니다.');
-    if (userData.id !== id) throw new Error('사용자를 수정할 권한이 없습니다.');
 
     // 비밀번호 확인
-    await verifyPassword(password, userData.password);
+    if (password) {
+      await verifyPassword(password, resource.password);
+    }
 
+    // 기존 데이터와 새 데이터 비교
     const updateData: Prisma.UserUpdateInput = {
-      ...(name !== userData.name && { name }),
-      ...(nickname !== userData.nickname && { nickname }),
+      ...(name !== resource.name && { name }),
+      ...(nickname !== resource.nickname && { nickname }),
       // 비밀번호 해시 처리
       ...(newPassword && { password: await hashPassword(newPassword) }),
     };
@@ -67,15 +67,11 @@ export class UserService {
   };
 
   // 사용자 삭제
-  public deleteUser = async (id: string, data: DeleteUserData) => {
+  public deleteUser = async (id: string, data: DeleteUserBody, resource: User) => {
     const { password } = data;
-    // 사용자가 존재하는지 확인
-    const userData = await this.userRepository.findUser(id);
-    if (!userData) throw new Error('사용자를 찾을 수 없습니다.');
-    if (userData.id !== id) throw new Error('사용자를 삭제할 권한이 없습니다.');
 
     // 비밀번호 확인
-    await verifyPassword(password, userData.password);
+    await verifyPassword(password, resource.password);
 
     return await this.userRepository.deleteUser(id);
   };
