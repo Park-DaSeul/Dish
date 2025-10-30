@@ -10,7 +10,7 @@ export class UserController {
     const query = req.parsedQuery;
 
     const users = await this.userService.getUsers(query);
-    res.json({ success: true, data: users });
+    res.status(200).json({ success: true, data: users });
   };
 
   // 특정 사용자 조회
@@ -18,7 +18,7 @@ export class UserController {
     const { id } = req.user;
 
     const user = await this.userService.getUserById(id);
-    res.json({ success: true, data: user });
+    res.status(200).json({ success: true, data: user });
   };
 
   // 사용자 수정
@@ -29,7 +29,7 @@ export class UserController {
 
     const data = req.parsedBody;
     const user = await this.userService.updateUser(id, data, resource);
-    res.json({ success: true, data: user });
+    res.status(200).json({ success: true, data: user });
   };
 
   // 사용자 삭제

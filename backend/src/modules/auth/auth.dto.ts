@@ -25,6 +25,7 @@ export interface RefreshRequest extends AuthenticatedRequest {
 // |  ZOD SCHEMAS  |
 // -----------------
 
+// auth
 const nameSchema = z
   .string()
   .min(1, '이름은 최소 1글자 이상이어야 합니다.')

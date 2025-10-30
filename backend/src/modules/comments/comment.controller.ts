@@ -18,7 +18,7 @@ export class CommentController {
     const { dishId } = req.parsedParams;
 
     const commentsData = await this.commentService.getComments(query, dishId);
-    return res.json({ success: true, data: commentsData });
+    return res.status(200).json({ success: true, data: commentsData });
   };
 
   // 특정 댓글 조회
@@ -26,7 +26,7 @@ export class CommentController {
     const { id } = req.parsedParams;
 
     const comment = await this.commentService.getCommentById(id);
-    return res.json({ success: true, data: comment });
+    return res.status(200).json({ success: true, data: comment });
   };
 
   // 댓글 생성
@@ -48,7 +48,7 @@ export class CommentController {
 
     const data = req.parsedBody;
     const comment = await this.commentService.updateComment(id, data, resource);
-    return res.json({ success: true, data: comment });
+    return res.status(200).json({ success: true, data: comment });
   };
 
   // 댓글 삭제

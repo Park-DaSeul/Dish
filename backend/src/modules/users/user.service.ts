@@ -61,6 +61,10 @@ export class UserService {
       ...(newPassword && { password: await hashPassword(newPassword) }),
     };
 
+    if (Object.keys(updateData).length === 0) {
+      throw new Error('수정할 내용이 없습니다.');
+    }
+
     const user = await this.userRepository.updateUser(id, updateData);
 
     return user;

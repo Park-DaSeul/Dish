@@ -20,7 +20,7 @@ userRouter.use(authenticate);
 // 모든 사용자 조회
 userRouter.get('/', validateGetQuery, asyncHandler(userController.getUsers));
 
-// 특정 사용자 조회, 수정, 삭제 (/:id)
+// 특정 사용자 조회, 수정, 삭제
 userRouter
   .route('/me')
   .get(asyncHandler(userController.getUserById))

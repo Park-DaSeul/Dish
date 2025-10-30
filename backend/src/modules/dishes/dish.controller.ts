@@ -16,7 +16,7 @@ export class DishController {
     const query = req.parsedQuery;
 
     const dishesData = await this.dishService.getDishes(query);
-    return res.json({ success: true, data: dishesData });
+    return res.status(200).json({ success: true, data: dishesData });
   };
 
   // 특정 요리 게시물 조회
@@ -24,7 +24,7 @@ export class DishController {
     const { id } = req.parsedParams;
 
     const dish = await this.dishService.getDishById(id);
-    return res.json({ success: true, data: dish });
+    return res.status(200).json({ success: true, data: dish });
   };
 
   // 요리 게시물 생성
@@ -44,7 +44,7 @@ export class DishController {
 
     const data = req.parsedBody;
     const dish = await this.dishService.updateDish(id, data, resource);
-    return res.json({ success: true, data: dish });
+    return res.status(200).json({ success: true, data: dish });
   };
 
   // 요리 게시물 삭제

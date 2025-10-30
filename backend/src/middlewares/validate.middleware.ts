@@ -1,11 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import type { ZodObject, ZodRawShape, z } from 'zod';
 
-/**
- * 파라미터(`req.params`)의 유효성을 검사하고,
- * 검증된 데이터를 `req.parsedParams`에 추가하는 미들웨어를 생성합니다.
- * @param schema - 검증에 사용할 Zod 스키마.
- */
+// parmas
 export const validateParams =
   <T extends ZodObject<ZodRawShape>>(schema: T) =>
   // 이전 미들웨어의 req 타입을 유지하기 위해 제네릭 TReq를 사용합니다.
@@ -25,11 +21,7 @@ export const validateParams =
     }
   };
 
-/**
- * 쿼리 스트링(`req.query`)의 유효성을 검사하고,
- * 검증된 데이터를 `req.parsedQuery`에 추가하는 미들웨어를 생성합니다.
- * @param schema - 검증에 사용할 Zod 스키마.
- */
+// query
 export const validateQuery =
   <T extends ZodObject<ZodRawShape>>(schema: T) =>
   <TReq extends Request>(req: TReq, _res: Response, next: NextFunction) => {
@@ -46,11 +38,7 @@ export const validateQuery =
     }
   };
 
-/**
- * 요청 바디(`req.body`)의 유효성을 검사하고,
- * 검증된 데이터를 `req.parsedBody`에 추가하는 미들웨어를 생성합니다.
- * @param schema - 검증에 사용할 Zod 스키마.
- */
+// body
 export const validateBody =
   <T extends ZodObject<ZodRawShape>>(schema: T) =>
   <TReq extends Request>(req: TReq, _res: Response, next: NextFunction) => {
