@@ -38,6 +38,7 @@ export class CommentService {
     const lastCommentInResults = comments[comments.length - 1];
     const nextCursor = lastCommentInResults ? lastCommentInResults.id : null;
 
+    // 데이터 가공
     const commentsData = {
       comments,
       nextCursor,
@@ -49,6 +50,7 @@ export class CommentService {
   // 특정 댓글 조회
   public getCommentById = async (id: string) => {
     const comment = await this.commentRepository.getCommentById(id);
+    if (!comment) throw new Error('댓글을 찾을 수 없습니다.');
 
     return comment;
   };

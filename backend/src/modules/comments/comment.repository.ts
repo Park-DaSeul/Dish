@@ -12,6 +12,12 @@ export class CommentRepository {
         content: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            nickname: true,
+          },
+        },
       },
     });
 
@@ -27,6 +33,12 @@ export class CommentRepository {
         content: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            nickname: true,
+          },
+        },
       },
     });
 
@@ -42,6 +54,12 @@ export class CommentRepository {
         content: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            nickname: true,
+          },
+        },
       },
     });
 
@@ -58,6 +76,12 @@ export class CommentRepository {
         content: true,
         createdAt: true,
         updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            nickname: true,
+          },
+        },
       },
     });
 

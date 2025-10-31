@@ -22,16 +22,16 @@ const dishService = new DishService(dishRepository);
 const dishController = new DishController(dishService);
 
 // 모든 요리 게시글 조회 (인증 불필요)
-dishRouter.route('/').get(validateGetQuery, asyncHandler(dishController.getDishes));
+dishRouter.get('/', validateGetQuery, asyncHandler(dishController.getDishes));
 
 // 특정 요리 게시글 조회 (인증 불필요)
-dishRouter.route('/:id').get(validateId, asyncHandler(dishController.getDishById));
+dishRouter.get('/:id', validateId, asyncHandler(dishController.getDishById));
 
 // --- 여기부터 로그인 필요 ---
 dishRouter.use(authenticate);
 
 // 요리 게시글 생성
-dishRouter.route('/').post(validateCreateBody, asyncHandler(dishController.createDish));
+dishRouter.post('/', validateCreateBody, asyncHandler(dishController.createDish));
 
 // 특정 요리 게시글 수정, 삭제 (/:id)
 dishRouter

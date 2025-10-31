@@ -20,24 +20,22 @@ const commentRouter = express.Router({ mergeParams: true });
 // 의존성 주입
 const commentRepository = new CommentRepository(prisma);
 const commentService = new CommentService(commentRepository);
-const commentsController = new CommentController(commentService);
+const commentController = new CommentController(commentService);
 
 // --- 여기부터 로그인 필요 ---
 commentRouter.use(authenticate);
 
-// 모든 댓글 조회 (특정요리)
-commentRouter.route('/').get(validateDishId, validateGetQuery, asyncHandler(commentsController.getComments));
-
-// 댓글 생성
+// 모든 댓글 조회 (특정요리), 댓글 생성
 commentRouter
   .route('/')
-  .post(validateDishId, validateCreateBody, checkDishExists, asyncHandler(commentsController.createComment));
+  .get(validateDishId, validateGetQuery, asyncHandler(commentController.getComments))
+  .post(validateDishId, validateCreateBody, checkDishExists, asyncHandler(commentController.createComment));
 
 // 특정 댓글 조회, 수정, 삭제 (/:id)
 commentRouter
   .route('/:id')
-  .get(validateId, asyncHandler(commentsController.getCommentById))
-  .put(validateId, validateUpdateBody, checkCommentOwner, asyncHandler(commentsController.updateComment))
-  .delete(validateId, checkCommentOwner, asyncHandler(commentsController.deleteComment));
+  .get(validateId, asyncHandler(commentController.getCommentById))
+  .put(validateId, validateUpdateBody, checkCommentOwner, asyncHandler(commentController.updateComment))
+  .delete(validateId, checkCommentOwner, asyncHandler(commentController.deleteComment));
 
 export { commentRouter };

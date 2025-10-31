@@ -18,9 +18,9 @@ const imageController = new ImageController(imageService);
 imageRouter.use(authenticate);
 
 // dish 사진 업로드
-imageRouter.route('/dishes').post(dishImageUpload, asyncHandler(imageController.uploadImage));
+imageRouter.post('/dishes', dishImageUpload, asyncHandler(imageController.uploadImage));
 
 // recipe 사진 업로드
-imageRouter.route('/recipes').post(recipeImageUpload, asyncHandler(imageController.uploadImage));
+imageRouter.post('/recipes', recipeImageUpload, asyncHandler(imageController.uploadImage));
 
 export { imageRouter };
