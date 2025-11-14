@@ -17,10 +17,11 @@ export interface ResourceExistsRequest extends Request {
   parsedParams: Record<string, string>;
 }
 
-export type ResourceWithRequest<T, TReq extends Request> = TReq & { resource: T };
+export type ResourceWithRequest<T> = OwnershipRequest & { resource: T };
 
-export const checkOwnership = <T extends { userId: string }>(
+export const checkOwnership = <T extends { userId: string } & Record<string, any>>(
   delegate: PrismaDelegate,
+  userFieldName = 'userId',
 ): RequestHandler<any, any, any, any, OwnershipRequest> => {
   return async (req, res, next) => {
     const typedReq = req as OwnershipRequest;
@@ -42,13 +43,13 @@ export const checkOwnership = <T extends { userId: string }>(
         return res.status(StatusCodes.NOT_FOUND).json({ message: `${modelName}을/를 찾을 수 없습니다` });
       }
 
-      if (resource.userId !== userId) {
+      if (resource[userFieldName] !== userId) {
         return res.status(StatusCodes.FORBIDDEN).json({ message: '이 작업을 수행할 권한이 없습니다.' });
       }
 
       // 타입이 보장된 resource를 req 객체에 할당합니다.
       // RequestWithResource<T> 타입 덕분에 컨트롤러에서 타입을 정확히 추론할 수 있습니다.
-      (req as ResourceWithRequest<T, OwnershipRequest>).resource = resource;
+      (req as ResourceWithRequest<T>).resource = resource;
 
       next();
     } catch (err) {
